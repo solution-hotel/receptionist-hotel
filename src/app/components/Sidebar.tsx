@@ -22,7 +22,7 @@ const sidebarItems = [
 const Sidebar = () => {
   const { isCollapsedSidebar, toggleSidebarCollappseHandle } =
     useContext(SidebarContext);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState("Lễ Tân");
 
   const handleItemClick = (name: string) => {
     setSelectedItem(name);

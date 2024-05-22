@@ -1,11 +1,36 @@
-import Button from "antd/es/button/button";
-import React from "react";
+"use client";
 
-const Receptionist = () => {
+import Button from "antd/es/button/button";
+import React, { useState } from "react";
+import Pagination from "./../../components/Pagination";
+import ModelAdd from "./../../components/ModelAdd";
+import ModelDetail from "@/app/components/ModelDetail";
+
+export default function Receptionist({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const [showModalAdd, setShowModalAdd] = useState(false);
+  const handleShowModelAdd = (show: boolean) => {
+    setShowModalAdd(show);
+  };
+  const [showModalDetail, setShowModalDetail] = useState(false);
+  const handleShowModelDetail = (show: boolean) => {
+    setShowModalDetail(show);
+  };
+  const page = searchParams["page"] ?? "1";
+  const per_page = searchParams["per_page"] ?? "5";
+
+  const start = (Number(page) - 1) * Number(per_page);
+  const end = start + Number(per_page);
+
+  // const listData = data.slice(start, end);
+
   return (
-    <div className="w-full h-full bg-slate-500 mt-4">
+    <div className="w-full h-full">
       <div className="flex justify-around gap-4 pt-8">
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">
               Đặt phòng chờ nhận trong ngày
@@ -13,7 +38,7 @@ const Receptionist = () => {
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">
               Đặt phòng chờ trả trong ngày
@@ -21,13 +46,13 @@ const Receptionist = () => {
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">Phòng đang sử dụng</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">Phòng trống</div>
             <div className="font-bold text-3xl">0</div>
@@ -37,7 +62,7 @@ const Receptionist = () => {
       <div className="relative overflow-x-auto shadow-md px-4 bg-white my-4">
         <div className="flex gap-6 content-center items-center justify-center border-b-4 relative">
           <div className="flex gap-8 text-sm">
-            <div>
+            <div className="text-right">
               <div>ĐẶT PHÒNG CHỜ NHẬN TRONG NGÀY</div>
               <div className="absolute top-0 left-0 right-0 h-16 w-72 border-b-4 border-black"></div>
             </div>
@@ -49,7 +74,9 @@ const Receptionist = () => {
             </div>
           </div>
           <div>
-            <Button>Thêm Booking</Button>
+            <Button onClick={() => handleShowModelAdd(true)}>
+              Thêm Booking
+            </Button>
           </div>
           <div>
             <div className="relative flex rounded-lg shadow-sm py-2">
@@ -59,7 +86,7 @@ const Receptionist = () => {
                 name="hs-trailing-button-add-on-with-icon-and-button"
                 className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               />
-              <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+              <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-10 ps-4">
                 <svg
                   className="flex-shrink-0 size-4 text-gray-400 dark:text-neutral-500"
                   xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +113,7 @@ const Receptionist = () => {
           </div>
         </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 my-4">
-          <thead className="text-xs text-gray-700 uppercase bg-blue-500 dark:text-black rounded-lg">
+          <thead className="text-xs text-gray-700 uppercase bg-blue-500 rounded-lg">
             <tr>
               <th scope="col" className="px-6 py-3">
                 STT
@@ -115,14 +142,17 @@ const Receptionist = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-black-900 whitespace-nowrap "
               >
                 1
               </th>
-              <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowModelDetail(true)}
+              >
                 7414
               </td>
               <td className="px-6 py-4">Nguyen Huu Thang</td>
@@ -203,8 +233,13 @@ const Receptionist = () => {
           </tbody>
         </table>
       </div>
+      <div>
+        <Pagination hasNextPage={true} hasPrevPage={true} />
+      </div>
+      {showModalAdd && <ModelAdd handelShowModel={handleShowModelAdd} />}
+      {showModalDetail && (
+        <ModelDetail handelShowModel={handleShowModelDetail} />
+      )}
     </div>
   );
-};
-
-export default Receptionist;
+}

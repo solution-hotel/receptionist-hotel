@@ -30,7 +30,7 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="text-sm text-center my-4 font-light hover:text-blue-500 cursor-pointer">
-            Forgot Password
+            Forgot Password?
           </div>
         </div>
         <div>

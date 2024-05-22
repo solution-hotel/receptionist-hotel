@@ -1,16 +1,22 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import PopupCleaning from "@/app/components/PopupCleaning";
 
 const HouseKeeping = () => {
+  const [showPopUpCleaning, setShowPopUpCleaning] = useState(false);
+  const handleShowPopUpCleaning = (show: boolean) => {
+    setShowPopUpCleaning(show);
+  };
   return (
-    <div className="w-full h-full bg-slate-500 mt-4">
+    <div className="w-full h-full">
       <div className="flex justify-start gap-4 pt-8 px-4">
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">SỐ PHÒNG BẨN</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
-        <div className=" bg-slate-50 w-72 h-28 rounded-lg backdrop-blur">
+        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="font-bold text-md">SỐ PHÒNG SẠCH</div>
             <div className="font-bold text-3xl">0</div>
@@ -86,7 +92,10 @@ const HouseKeeping = () => {
               >
                 1
               </th>
-              <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
                 209
               </td>
               <td className="px-6 py-4 text-gray-900">LUXURY</td>
@@ -98,6 +107,9 @@ const HouseKeeping = () => {
           </tbody>
         </table>
       </div>
+      {showPopUpCleaning && (
+        <PopupCleaning handelShowPopUp={handleShowPopUpCleaning} />
+      )}
     </div>
   );
 };
