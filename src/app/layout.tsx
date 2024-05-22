@@ -4,6 +4,9 @@ import "./globals.css";
 import SidebarProvider from "./components/SidebarContext";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
+import ModelDetail from "./components/ModelDetail";
+import ModelCheckout from "./components/ModelCheckout";
+import PopupCleaning from "./components/PopupCleaning";
 import LoginPage from "./login/page";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "100", style: "italic" });
@@ -21,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {/* <SidebarProvider>
+        <SidebarProvider>
           <div className="flex">
             <div>
               <Sidebar />
@@ -33,8 +36,7 @@ export default function RootLayout({
               <div>{children}</div>
             </div>
           </div>
-        </SidebarProvider> */}
-        <LoginPage />
+        </SidebarProvider>
       </body>
     </html>
   );
