@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import PopupCleaning from "@/app/components/PopupCleaning";
+import PopupCleaning from "@/components/PopupCleaning";
+import PaginationD from "./../../../components/PaginationD";
 
 const HouseKeeping = () => {
   const [showPopUpCleaning, setShowPopUpCleaning] = useState(false);
@@ -31,7 +32,7 @@ const HouseKeeping = () => {
               type="text"
               id="hs-trailing-button-add-on-with-icon-and-button"
               name="hs-trailing-button-add-on-with-icon-and-button"
-              className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
             />
             <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
               <svg
@@ -104,8 +105,104 @@ const HouseKeeping = () => {
               <td className="px-6 py-4 text-gray-900">A THÁI</td>
               <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
             </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+                2
+              </th>
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
+                109
+              </td>
+              <td className="px-6 py-4 text-gray-900">LUXURY</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
+              <td className="px-6 py-4 text-gray-900">BẨN</td>
+              <td className="px-6 py-4 text-gray-900">A THÁI</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
+            </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+               3
+              </th>
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
+                207
+              </td>
+              <td className="px-6 py-4 text-gray-900">LUXURY</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
+              <td className="px-6 py-4 text-gray-900">BẨN</td>
+              <td className="px-6 py-4 text-gray-900">A THÁI</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
+            </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+                4
+              </th>
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
+                224
+              </td>
+              <td className="px-6 py-4 text-gray-900">LUXURY</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
+              <td className="px-6 py-4 text-gray-900">BẨN</td>
+              <td className="px-6 py-4 text-gray-900">A THÁI</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
+            </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+                5
+              </th>
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
+                108
+              </td>
+              <td className="px-6 py-4 text-gray-900">LUXURY</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
+              <td className="px-6 py-4 text-gray-900">BẨN</td>
+              <td className="px-6 py-4 text-gray-900">A THÁI</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
+            </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
+              >
+                6
+              </th>
+              <td
+                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
+                onClick={() => handleShowPopUpCleaning(true)}
+              >
+                362
+              </td>
+              <td className="px-6 py-4 text-gray-900">LUXURY</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
+              <td className="px-6 py-4 text-gray-900">BẨN</td>
+              <td className="px-6 py-4 text-gray-900">A THÁI</td>
+              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
+            </tr>
           </tbody>
         </table>
+        <PaginationD />
       </div>
       {showPopUpCleaning && (
         <PopupCleaning handelShowPopUp={handleShowPopUpCleaning} />

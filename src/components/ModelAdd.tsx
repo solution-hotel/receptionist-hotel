@@ -19,7 +19,7 @@ const ModelAdd = ({
               <div className="grid grid-cols-2 gap-2 mb-4">
                 <div className="flex flex-col flex-grow">
                   <label htmlFor="" className="font-bold">
-                    HỌ
+                    Họ
                   </label>
                   <input
                     type="text"
