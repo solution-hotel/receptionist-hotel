@@ -2,15 +2,20 @@
 
 import Button from "antd/es/button/button";
 import React, { useState } from "react";
-import Pagination from "./../../components/Pagination";
-import ModelAdd from "./../../components/ModelAdd";
-import ModelDetail from "@/app/components/ModelDetail";
+import ModelAdd from "../../../components/ModelAdd";
+import ModelDetail from "@/components/ModelDetail";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import PaginationD from "./../../../components/PaginationD";
 
 export default function Receptionist({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
+  const dataUser = useSelector((state: RootState) => state.userlogin.login);
+  console.log("data user after login", dataUser);
+
   const [showModalAdd, setShowModalAdd] = useState(false);
   const handleShowModelAdd = (show: boolean) => {
     setShowModalAdd(show);
@@ -74,7 +79,10 @@ export default function Receptionist({
             </div>
           </div>
           <div>
-            <Button onClick={() => handleShowModelAdd(true)}>
+            <Button
+              className="bg-[#418DFF] text-white py-3 px-4 w-fit h-fit  flex justify-center items-center"
+              onClick={() => handleShowModelAdd(true)}
+            >
               Thêm Booking
             </Button>
           </div>
@@ -84,11 +92,11 @@ export default function Receptionist({
                 type="text"
                 id="hs-trailing-button-add-on-with-icon-and-button"
                 name="hs-trailing-button-add-on-with-icon-and-button"
-                className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               />
               <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-10 ps-4">
                 <svg
-                  className="flex-shrink-0 size-4 text-gray-400 dark:text-neutral-500"
+                  className="flex-shrink-0 size-4 text-gray-400"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -142,10 +150,10 @@ export default function Receptionist({
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-black-900 whitespace-nowrap "
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 1
               </th>
@@ -155,86 +163,101 @@ export default function Receptionist({
               >
                 7414
               </td>
-              <td className="px-6 py-4">Nguyen Huu Thang</td>
-              <td className="px-6 py-4">09319020102</td>
-              <td className="px-6 py-4">Luxury</td>
-              <td className="px-6 py-4">209</td>
-              <td className="px-6 py-4">06/09/2024</td>
-              <td className="px-6 py-4">24/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">Nguyen Huu Thang</td>
+              <td className="px-6 py-4 text-gray-900">09319020102</td>
+              <td className="px-6 py-4 text-gray-900">Luxury</td>
+              <td className="px-6 py-4 text-gray-900">209</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
             </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 2
               </th>
               <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                 2912
               </td>
-              <td className="px-6 py-4">Bien Nguyen</td>
-              <td className="px-6 py-4">09319020102</td>
-              <td className="px-6 py-4">Luxury</td>
-              <td className="px-6 py-4">209</td>
-              <td className="px-6 py-4">06/09/2024</td>
-              <td className="px-6 py-4">24/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">Bien Nguyen</td>
+              <td className="px-6 py-4 text-gray-900">09319020102</td>
+              <td className="px-6 py-4 text-gray-900">Luxury</td>
+              <td className="px-6 py-4 text-gray-900">209</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
             </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 3
               </th>
               <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                 1562
               </td>
-              <td className="px-6 py-4">Kim Tra</td>
-              <td className="px-6 py-4">09319020102</td>
-              <td className="px-6 py-4">Luxury</td>
-              <td className="px-6 py-4">209</td>
-              <td className="px-6 py-4">06/09/2024</td>
-              <td className="px-6 py-4">24/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">Kim Tra</td>
+              <td className="px-6 py-4 text-gray-900">09319020102</td>
+              <td className="px-6 py-4 text-gray-900">Luxury</td>
+              <td className="px-6 py-4 text-gray-900">209</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
             </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 4
               </th>
               <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                 7521
               </td>
-              <td className="px-6 py-4">Tran Quoc Huu</td>
-              <td className="px-6 py-4">09319020102</td>
-              <td className="px-6 py-4">Luxury</td>
-              <td className="px-6 py-4">209</td>
-              <td className="px-6 py-4">06/09/2024</td>
-              <td className="px-6 py-4">24/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">Tran Quoc Huu</td>
+              <td className="px-6 py-4 text-gray-900">09319020102</td>
+              <td className="px-6 py-4 text-gray-900">Luxury</td>
+              <td className="px-6 py-4 text-gray-900">209</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
             </tr>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
               <th
                 scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
               >
                 5
               </th>
               <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
                 9821
               </td>
-              <td className="px-6 py-4">A Quang</td>
-              <td className="px-6 py-4">09319020102</td>
-              <td className="px-6 py-4">Luxury</td>
-              <td className="px-6 py-4">209</td>
-              <td className="px-6 py-4">06/09/2024</td>
-              <td className="px-6 py-4">24/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">A Quang</td>
+              <td className="px-6 py-4 text-gray-900">09319020102</td>
+              <td className="px-6 py-4 text-gray-900">Luxury</td>
+              <td className="px-6 py-4 text-gray-900">209</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
+            </tr>
+            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
+              <th
+                scope="row"
+                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+              >
+                6
+              </th>
+              <td className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                9221
+              </td>
+              <td className="px-6 py-4 text-gray-900">A Thi</td>
+              <td className="px-6 py-4 text-gray-900">09319012102</td>
+              <td className="px-6 py-4 text-gray-900">Standard</td>
+              <td className="px-6 py-4 text-gray-900">229</td>
+              <td className="px-6 py-4 text-gray-900">06/09/2024</td>
+              <td className="px-6 py-4 text-gray-900">24/09/2024</td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <div>
-        <Pagination hasNextPage={true} hasPrevPage={true} />
+        <PaginationD />
       </div>
       {showModalAdd && <ModelAdd handelShowModel={handleShowModelAdd} />}
       {showModalDetail && (

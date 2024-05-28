@@ -27,7 +27,6 @@ const Sidebar = () => {
   const handleItemClick = (name: string) => {
     setSelectedItem(name);
   };
-
   return (
     <div className="sidebar__wrapper">
       <button className="btn" onClick={toggleSidebarCollappseHandle}>

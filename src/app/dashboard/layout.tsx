@@ -1,10 +1,9 @@
-
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "../globals.css";
-import SidebarProvider from "../components/SidebarContext";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
+import SidebarProvider from "../../components/SidebarContext";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "100", style: "italic" });
 
@@ -18,9 +17,7 @@ export default function RootLayout({
       <body>
         <SidebarProvider>
           <div className="flex">
-            <div>
-              <Sidebar />
-            </div>
+            <Sidebar />
             <div className="w-full">
               <div>
                 <Navbar />
