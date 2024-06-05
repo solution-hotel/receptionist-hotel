@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { BsPersonCircle } from "react-icons/bs";
 import { MdArrowDropDown, MdLogout } from "react-icons/md";
-import { getProfile } from "./../utils/api/receptionist";
+import { getProfile, logoutApi } from "./../utils/api/receptionist";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { UserProfile } from "../utils/types/user";
@@ -30,9 +30,14 @@ const Navbar = () => {
       console.error("Error fetching user profile:", error);
     }
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("Logging out...");
-    dispatch(logoutUser());
+    try {
+      const user = await logoutApi(token);
+      dispatch(logoutUser());
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
     router.push("/");
     setTimeout(() => {
       window.location.reload();
