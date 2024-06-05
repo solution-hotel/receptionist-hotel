@@ -2,11 +2,6 @@
 import React from "react";
 import { FC } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-// interface PaginationControl {
-//   hasNextPage: boolean;
-//   hasPrevPage: boolean;
-// }
-
 import {
   Pagination,
   PaginationItemType,
@@ -14,7 +9,12 @@ import {
 } from "@nextui-org/react";
 import { ChevronIcon } from "./ChevronIcon";
 
-const PaginationD = () => {
+const PaginationD: FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+
   const renderItem = ({
     ref,
     key,
@@ -25,12 +25,29 @@ const PaginationD = () => {
     setPage,
     className,
   }: PaginationItemRenderProps<HTMLButtonElement>) => {
+    const handleClick = (newPage: number) => {
+      setPage(newPage);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", newPage.toString());
+      router.push(`?${params.toString()}`);
+    };
+
+    const handleNextClick = () => {
+      onNext();
+      handleClick(currentPage + 1);
+    };
+
+    const handlePreviousClick = () => {
+      onPrevious();
+      handleClick(currentPage - 1);
+    };
+
     if (value === PaginationItemType.NEXT) {
       return (
         <button
           key={key}
           className="bg-default-200/50 min-w-8 w-8 h-8 flex items-center justify-center"
-          onClick={onNext}
+          onClick={handleNextClick}
         >
           <ChevronIcon className="rotate-180" />
         </button>
@@ -42,7 +59,7 @@ const PaginationD = () => {
         <button
           key={key}
           className="bg-default-200/50 min-w-8 w-8 h-8 flex items-center justify-center"
-          onClick={onPrevious}
+          onClick={handlePreviousClick}
         >
           <ChevronIcon />
         </button>
@@ -66,19 +83,20 @@ const PaginationD = () => {
             ? "text-white bg-gradient-to-br from-indigo-500 to-pink-500 font-bold"
             : ""
         } px-3 py-1`}
-        onClick={() => setPage(value)}
+        onClick={() => handleClick(value)}
       >
         {value}
       </button>
     );
   };
+
   return (
     <div className="flex justify-center items-center h-full">
       <Pagination
         disableCursorAnimation
         showControls
-        total={10}
-        initialPage={1}
+        total={5}
+        page={currentPage}
         className="gap-2"
         radius="full"
         renderItem={renderItem}
