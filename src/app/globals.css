@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.sidebar__wrapper {
+  position: relative;
+}
+
+.sidebar {
+  width: 17rem;
+  height: 100%;
+  background-color: #fff;
+  padding: 1rem;
+  transition: all 0.3s linear;
+}
+
+.sidebar__top {
+  width: max-content;
+  display: flex;
+  align-content: center;
+  gap: 1rem;
+  padding-bottom: 1rem ;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar__logo {
+  width: 3.4rem;
+  height: 3.5rem;
+  object-fit:cover;
+  border-radius: 1rem;
+}
+
+
+.sidebar__list {
+  list-style: none;
+}
+
+.sidebar__link {
+  display: inline-block;
+  font-size: 1rem;
+  text-decoration: none;
+  color:#000;
+  padding:0.8rem;
+  display: flex;
+  background-color: #f3f4f6;
+  margin-bottom: 1rem;
+  border-radius: 0.8rem;
+}
+
+
+.sidebar__icon {
+  font-size: 1.2rem;
+  display: inline-block;
+}
+
+.sidebar__name {
+  margin-left: 0.5rem;
+}
+
+
+.btn {
+  position: absolute;
+  right: 0;
+  top: 4.7rem;
+  background-color: #fff;
+  width:1.5rem;
+  height:1.5rem;
+  border:1px solid #e5e7eb;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: translateX(50%);
+  font-size: 1.1rem;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.sidebar__link.selected  {
+  background-color: black; 
+}
+
+.sidebar__link.selected .sidebar__name  {
+  color: white;  
+}
+.sidebar__icon.selected {
+  color: white;  
+}
+
+[data-collapse ="true"]{
+  width: 5.3rem;
+}
+
+
+[data-collapse ="true"] .sidebar__name {
+  display: none;
+}
+
+
+.background {
+  background-image: url('../../public/background.png');
+  background-repeat: no-repeat;
+  background-size: cover; 
+}
+
+.btn-login {
+  background-color: #314486 !important;
+  width: 180px;
+}
