@@ -21,7 +21,7 @@ export const loginApi = async (email:string, password:string) => {
     return data;
   };
 
-export const logoutApi = async (token) => {
+export const logoutApi = async (token: string) => {
   const url = `${baseurl}/auth/logout`;
   console.log("data token", token)
   console.log("type of token",typeof token)
@@ -54,7 +54,7 @@ export const getProfile = async (token: string | null | undefined) => {
     return data;
 }
 
-export const listBooking = async (fromDay: Date, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number | null, page: string, limit: number	
+export const listBooking = async (fromDay: Date, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number | null, page: number, limit: number	
 ) => {
   const url = `${baseurl}/booking/list?fromDay=${fromDay}&toDay=${toDay? toDay.toISOString() : ""}&findText=${encodeURIComponent(findText ?? "")}&roomType=${roomType}&roomDetail=${roomDetail}&status=${status}&typeDate=${typeDate}&page=${page}&limit=${limit}`;
 
@@ -156,7 +156,7 @@ export const updateBooking = async (id, formData) => {
   }
 };
 
-export const cancelBooking = async (id) => {
+export const cancelBooking = async (id: number) => {
   const url = `${baseurl}/booking/cancel?id=${id}`;
 
   const response = await fetch(url, {
@@ -172,3 +172,18 @@ export const cancelBooking = async (id) => {
   return data;
 }
 
+
+export const sendMailBooking = async (email:string, name: string, bookingId: number) => {
+  const url = `${baseurl}/api/email/send`
+
+  const response = await fetch(url, {
+    headers:{
+      "Content-Type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify({ToEmail: email, CustomerName : name, BookingDetails: bookingId})
+  })
+
+  const data = await response.json();
+  return data;
+}

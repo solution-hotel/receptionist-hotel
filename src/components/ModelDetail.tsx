@@ -6,16 +6,20 @@ import {
   getDetailBooking,
   updateBooking,
   cancelBooking,
+  sendMailBooking,
 } from "@/utils/api/receptionist";
 import { format } from "date-fns";
 import ClipLoader from "react-spinners/ClipLoader";
+import Swal from "sweetalert2";
 
 const ModelDetail = ({
   handelShowModel,
   id,
+  onUpdate,
 }: {
-  handelShowModel: (show: boolean) => void;
+  handelShowModel: (show: boolean, id: number) => void;
   id: number;
+  onUpdate: () => void;
 }) => {
   const [bookingData, setBookingData] = useState({
     checkinDate: "",
@@ -100,22 +104,46 @@ const ModelDetail = ({
     setLoading(true);
     try {
       await updateBooking(id, bookingData);
-      alert("Booking updated successfully");
+      Swal.fire({
+        title: "Thành công!",
+        text: "Cập nhật đặt phòng thành công.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
       handelShowModel(false, 0);
     } catch (error) {
       console.error("Error updating booking:", error);
-      alert("Error updating booking");
+    }
+  };
+
+  const handleSendMail = async () => {
+    setLoading(true);
+    try {
+      await sendMailBooking(bookingData.email, bookingData.firstName, id);
+      Swal.fire({
+        title: "Thành công!",
+        text: "Cập nhật đặt phòng thành công.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      handelShowModel(false, 0);
+    } catch (error) {
+      console.error("Error send mail booking:", error);
     }
   };
 
   const handleCancel = async () => {
     try {
       await cancelBooking(id);
-      alert("Booking canceled successfully");
+      Swal.fire({
+        title: "Thành công!",
+        text: "Hủy đặt phòng thành công.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
       handelShowModel(false, 0);
     } catch (error) {
       console.error("Error canceling booking: ", error);
-      alert("Error canceling booking");
     }
   };
 
@@ -124,71 +152,65 @@ const ModelDetail = ({
   };
   return (
     <div className="fixed inset-0 flex items-center justify-center my-4 overflow-y-auto z-100">
-      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 px-4 top-1 bottom-10 bg-white border-black border-1 z-100">
+      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 px-4 top-1 bottom-10 bg-white border-black border-1 z-100 rounded-md">
         <div className="flex justify-end mr-4 cursor-pointer">
           <FaWindowClose size={25} onClick={() => handelShowModel(false, 0)} />
         </div>
-        <div className="text-center font-bold">THÔNG TIN CHI TIẾT BOOKING</div>
+        <div className="text-center font-bold text-lg">
+          Thông tin chi tiết đặt phòng
+        </div>
         <div>
           <div className="flex flex-row items-center gap-1 ml-8">
             <div>
               <MdWindow size={25} />
             </div>
-            <div className="font-bold">Thông tin booking</div>
+            <div className="font-semibold">Thông tin booking</div>
           </div>
           <div className="mx-4 my-4 px-4 py-4">
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   <div className="flex flex-col flex-grow">
-                    <label htmlFor="lastName" className="font-bold">
-                      Họ
-                    </label>
+                    <label htmlFor="lastName">Họ</label>
                     <input
                       value={bookingData.lastName}
                       type="text"
                       name="lastName"
                       id="lastName"
-                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                       onChange={handleChange}
                     />
                   </div>
                   <div className="flex flex-col flex-grow">
-                    <label htmlFor="firstName" className="font-bold">
-                      Tên
-                    </label>
+                    <label htmlFor="firstName">Tên</label>
                     <input
                       value={bookingData.firstName}
                       type="text"
                       name="firstName"
                       id="firstName"
-                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                       onChange={handleChange}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="maximumCapacity" className="font-bold">
-                    Số lượng người
-                  </label>
+                  <label htmlFor="maximumCapacity">Số lượng người</label>
                   <input
                     value={bookingData.maximumCapacity}
                     type="number"
                     name="maximumCapacity"
                     id="maximumCapacity"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="roomType" className="font-bold">
-                    Loại Phòng
-                  </label>
+                  <label htmlFor="roomType">Loại Phòng</label>
                   <select
                     name="roomType"
                     value={bookingData.roomType}
                     onChange={handleChange}
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   >
                     <option value="">Chọn loại phòng</option>
                     <option value="Standard">Standard</option>
@@ -202,76 +224,64 @@ const ModelDetail = ({
               </div>
               <div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="phoneNumber" className="font-bold">
-                    Số điện thoại
-                  </label>
+                  <label htmlFor="phoneNumber">Số điện thoại</label>
                   <input
                     value={bookingData.phoneNumber}
                     type="text"
                     name="phoneNumber"
                     id="phoneNumber"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="numberOfAdults" className="font-bold">
-                    Người lớn
-                  </label>
+                  <label htmlFor="numberOfAdults">Người lớn</label>
                   <input
                     value={bookingData.numberOfAdults}
                     type="number"
                     name="numberOfAdults"
                     id="numberOfAdults"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="quantity" className="font-bold">
-                    Số lượng
-                  </label>
+                  <label htmlFor="quantity">Số lượng</label>
                   <input
                     value={1}
                     type="number"
                     name="quantity"
                     id="quantity"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     disabled={true}
                   />
                 </div>
               </div>
               <div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="email" className="font-bold">
-                    Email
-                  </label>
+                  <label htmlFor="email">Email</label>
                   <input
                     value={bookingData.email}
                     type="email"
                     name="email"
                     id="email"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="numberOfChildren" className="font-bold">
-                    Trẻ em
-                  </label>
+                  <label htmlFor="numberOfChildren">Trẻ em</label>
                   <input
                     value={bookingData.numberOfChildren}
                     type="number"
                     name="numberOfChildren"
                     id="numberOfChildren"
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
-                  <label htmlFor="price" className="font-bold">
-                    Giá
-                  </label>
+                  <label htmlFor="price">Giá</label>
                   <input
                     disabled
                     type="text"
@@ -282,34 +292,30 @@ const ModelDetail = ({
                         : bookingData.price
                     }
                     onChange={handleChange}
-                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                    className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   />
                 </div>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 mb-4">
               <div className="flex flex-col">
-                <label htmlFor="numberRoom" className="font-bold">
-                  Số phòng
-                </label>
+                <label htmlFor="numberRoom">Số phòng</label>
                 <input
                   value={bookingData.RoomNumber || ""}
                   type="text"
                   name="RoomNumber"
                   id="numberRoom"
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="status" className="font-bold">
-                  Trạng thái
-                </label>
+                <label htmlFor="status">Trạng thái</label>
                 <select
                   value={bookingData.Status}
                   name="Status"
                   id="status"
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                   disabled={bookingData.Status ? bookingData.Status == 4 : true}
                 >
@@ -323,9 +329,7 @@ const ModelDetail = ({
             </div>
             <div className="grid grid-cols-2 gap-2 mb-4">
               <div className="flex flex-col">
-                <label htmlFor="checkinDate" className="font-bold">
-                  Ngày nhận phòng
-                </label>
+                <label htmlFor="checkinDate">Ngày nhận phòng</label>
                 <input
                   value={
                     bookingData.checkinDate
@@ -335,14 +339,12 @@ const ModelDetail = ({
                   type="date"
                   name="checkinDate"
                   id="checkinDate"
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="checkoutDate" className="font-bold">
-                  Ngày trả phòng
-                </label>
+                <label htmlFor="checkoutDate">Ngày trả phòng</label>
                 <input
                   value={
                     bookingData.checkoutDate
@@ -352,7 +354,7 @@ const ModelDetail = ({
                   type="date"
                   name="checkoutDate"
                   id="checkoutDate"
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400"
+                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
               </div>
@@ -458,13 +460,13 @@ const ModelDetail = ({
           <MdOutlineAddBox size={30} />
         </div>
         <div className="mx-8">
-          <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#D9D9D9] bg-opacity-20">
+          <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#E8E8E8              ] bg-opacity-20">
             <div className="flex justify-end">
-              <span className="mr-[60px] font-bold">Tổng tiền phòng</span>
+              <span className="mr-[100px] font-bold">Tiền phòng</span>
               <span className="font-bold">500,000 VNĐ</span>
             </div>
             <div className="flex justify-end">
-              <span className="mr-[55px] font-bold">Tổng tiền dịch vụ</span>
+              <span className="mr-[95px] font-bold">Tiền dịch vụ</span>
               <span className="font-bold">100,000 VNĐ</span>
             </div>
             <div className="flex justify-end">
@@ -476,15 +478,25 @@ const ModelDetail = ({
         <div className="flex justify-center gap-4 my-4">
           <div>
             <button
+              type="button"
+              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              onClick={handleSave}
+            >
+              Lưu
+            </button>
+          </div>
+          <div>
+            <button
               onClick={() => handleShowModelCheckout(true)}
               type="button"
-              className="focus:outline-none text-white bg-red-700 hover:bg-red-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+              className="focus:outline-none text-white bg-[#FBC252] hover:bg-[#FFB100] font-medium rounded-lg text-sm px-5 py-2.5"
             >
               Check-out
             </button>
           </div>
           <div>
             <button
+              onClick={handleSendMail}
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
@@ -494,7 +506,7 @@ const ModelDetail = ({
           <div>
             <button
               type="button"
-              className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600"
+              className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-[#C38154] dark:text-white dark:hover:bg-[#884A39]"
             >
               Y/C kiểm phòng
             </button>
@@ -506,15 +518,6 @@ const ModelDetail = ({
               onClick={handleCancel}
             >
               Hủy Booking
-            </button>
-          </div>
-          <div>
-            <button
-              type="button"
-              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              onClick={handleSave}
-            >
-              Lưu
             </button>
           </div>
         </div>

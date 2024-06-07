@@ -75,18 +75,30 @@ const PaginationD: FC = () => {
     }
 
     return (
-      <button
-        ref={ref}
-        key={key}
-        className={`${
-          isActive
-            ? "text-white bg-gradient-to-br from-indigo-500 to-pink-500 font-bold"
-            : ""
-        } px-3 py-1`}
-        onClick={() => handleClick(value)}
-      >
-        {value}
-      </button>
+      // <button
+      //   ref={ref}
+      //   key={key}
+      //   className={`${
+      //     isActive
+      //       ? "text-white bg-gradient-to-br from-indigo-500 to-pink-500 font-bold"
+      //       : ""
+      //   } px-3 py-1`}
+      //   onClick={() => handleClick(value)}
+      // >
+      //   {value}
+      // </button>
+            <button
+            ref={ref}
+            key={key}
+            className={`${
+              isActive
+                ? "text-white bg-[#418DFF] font-bold"
+                : ""
+            } px-3 py-1`}
+            onClick={() => handleClick(value)}
+          >
+            {value}
+          </button>
     );
   };
 

@@ -1,26 +1,29 @@
 "use client";
 
 import Button from "antd/es/button/button";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ModelAdd from "../../../components/ModelAdd";
 import ModelDetail from "@/components/ModelDetail";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import PaginationD from "./../../../components/PaginationD";
 import { listBooking } from "@/utils/api/receptionist";
+import { Booking } from "@/utils/types/receptionist";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function Receptionist({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const dataUser = useSelector((state: RootState) => state.userlogin.login);
-  const [useID, setUseID] = useState(null);
+  // const dataUser = useSelector((state: RootState) => state.userlogin.login);
+  const [useID, setUseID] = useState<number>(0);
   const [dataUpdated, setDataUpdated] = useState(false);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [noResults, setNoResults] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleShowModelAdd = (show: boolean) => {
     setShowModalAdd(show);
   };
@@ -33,27 +36,33 @@ export default function Receptionist({
     setDataUpdated((prev) => !prev);
   };
 
-  const fromDay: Date = new Date();
-  console.log(fromDay);
+  const fromDay = useMemo(() => new Date(), []);
 
-  const page = Array.isArray(searchParams["page"])
+  const pageString = Array.isArray(searchParams["page"])
     ? searchParams["page"][0]
     : searchParams["page"] ?? "1";
 
+  const page = parseInt(pageString, 10);
+
   const formatDate = (dateString: Date) => {
-    const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  const [dataListBooking, setDataListBooking] = useState([]);
+  const [dataListBooking, setDataListBooking] = useState<Booking[]>([]);
 
   const handleSearchClick = () => {
     setSearch(searchInput);
   };
 
   useEffect(() => {
-    const fetchData = async (search) => {
+    const fetchData = async (search: string) => {
       try {
+        setLoading(true);
         const data = await listBooking(
           fromDay,
           null,
@@ -72,43 +81,48 @@ export default function Receptionist({
           setDataListBooking([]);
           setNoResults(true);
         }
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       } catch (error) {
         console.error("Error fetching booking data:", error);
         setNoResults(true);
+        setLoading(false);
       }
     };
 
     fetchData(search);
-  }, [showModalDetail, dataUpdated, page, search]);
+  }, [fromDay, showModalDetail, dataUpdated, page, search]);
 
   return (
     <div className="w-full h-full">
+      {loading && (
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <ClipLoader color="#36d7b7" />
+        </div>
+      )}
       <div className="flex justify-around gap-4 pt-8">
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">
-              Đặt phòng chờ nhận trong ngày
-            </div>
+            <div className="text-md">Đặt phòng chờ nhận trong ngày</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">
-              Đặt phòng chờ trả trong ngày
-            </div>
+            <div className="text-md">Đặt phòng chờ trả trong ngày</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">Phòng đang sử dụng</div>
+            <div className="text-md">Phòng đang sử dụng</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">Phòng trống</div>
+            <div className="text-md">Phòng trống</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
@@ -126,17 +140,17 @@ export default function Receptionist({
             {/* <div>
               <div>PHÒNG ĐANG SỬ DỤNG</div>
             </div> */}
-                        <div>
+            <div>
               <div>TẤT CẢ</div>
             </div>
           </div>
           <div>
-            <Button
-              className="bg-[#418DFF] text-white py-3 px-4 w-fit h-fit  flex justify-center items-center"
+            <button
+              className="bg-[#418DFF] text-white py-3 px-4 w-fit h-fit flex justify-center items-center rounded-md hover:bg-blue-700"
               onClick={() => handleShowModelAdd(true)}
             >
-              Thêm Booking
-            </Button>
+              Thêm đặt phòng
+            </button>
           </div>
           <div>
             <div className="relative flex rounded-lg shadow-sm py-2">
@@ -144,8 +158,9 @@ export default function Receptionist({
                 type="text"
                 id="hs-trailing-button-add-on-with-icon-and-button"
                 name="hs-trailing-button-add-on-with-icon-and-button"
+                placeholder="Tìm kiếm"
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="py-1 px-4 ps-11 block border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                className="py-1 px-4 ps-11 block border-gray-900 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:border-neutral-700 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
               />
               <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-10 ps-4">
                 <svg
@@ -206,7 +221,7 @@ export default function Receptionist({
           <tbody>
             {dataListBooking.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center py-4 text-gray-500">
+                <td colSpan={8} className="text-center py-4 text-gray-500">
                   Không có kết quả trả về
                 </td>
               </tr>
@@ -252,7 +267,7 @@ export default function Receptionist({
         <PaginationD />
       </div>
       {showModalAdd && <ModelAdd handelShowModel={handleShowModelAdd} />}
-      {showModalDetail && (
+      {showModalDetail && useID !== null && (
         <ModelDetail
           handelShowModel={handleShowModelDetail}
           id={useID}

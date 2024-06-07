@@ -44,3 +44,17 @@ export const assignHousekeepingToRoom = async (roomId: number, employeeId: numbe
   console.log("data response of assign HK", data)
   return data;
 }
+
+export const getDetailRoom = async (id: number) => {
+  const url = `${baseurl}/room/${id}`
+
+  const response = await fetch(url, {
+    method:"GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  })
+
+  const data = await response.json()
+  return data
+}

@@ -21,7 +21,7 @@ const FobiddenError = () => {
           </div>
           <div className="text-xl">Access denied...</div>
           <div className="text-xl">
-            You don't have permission to access this page
+            You do not have permission to access this page
           </div>
         </div>
         <div>

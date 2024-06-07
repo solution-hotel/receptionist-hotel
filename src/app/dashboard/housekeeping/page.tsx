@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 import PopupCleaning from "@/components/PopupCleaning";
 import PaginationD from "./../../../components/PaginationD";
 import { getListRoom } from "@/utils/api/housekeeping";
+import { Room } from "@/utils/types/housekeeping";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const HouseKeeping = ({
   searchParams,
@@ -10,9 +12,10 @@ const HouseKeeping = ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const [showPopUpCleaning, setShowPopUpCleaning] = useState(false);
-  const [dataListRoom, setDataListRoom] = useState([]);
+  const [dataListRoom, setDataListRoom] = useState<Room[]>([]);
   const [noResults, setNoResults] = useState(false);
-  const [roomID, setRoomID] = useState(null);
+  const [roomID, setRoomID] = useState<number>(0);
+  const [loading, setLoading] = useState(false);
   const handleShowPopUpCleaning = (show: boolean, id: number) => {
     setRoomID(id);
     setShowPopUpCleaning(show);
@@ -25,6 +28,7 @@ const HouseKeeping = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const data = await getListRoom(parseInt(page));
 
         console.log("data response", data);
@@ -36,6 +40,9 @@ const HouseKeeping = ({
           setDataListRoom([]);
           setNoResults(true);
         }
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       } catch (error) {
         console.error("Error fetching booking data:", error);
         setNoResults(true);
@@ -46,16 +53,21 @@ const HouseKeeping = ({
   }, [page, noResults]);
   return (
     <div className="w-full h-full">
+      {loading && (
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
+          <ClipLoader color="#36d7b7" />
+        </div>
+      )}
       <div className="flex justify-start gap-4 pt-8 px-4">
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">SỐ PHÒNG BẨN</div>
+            <div className="text-md">Số phòng bẩn</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
-            <div className="font-bold text-md">SỐ PHÒNG SẠCH</div>
+            <div className="text-md">Số phòng sạch</div>
             <div className="font-bold text-3xl">0</div>
           </div>
         </div>
@@ -238,7 +250,7 @@ const HouseKeeping = ({
             </tr> */}
             {dataListRoom.length === 0 ? (
               <tr>
-                <td colSpan="8" className="text-center py-4 text-gray-500">
+                <td colSpan={8} className="text-center py-4 text-gray-500">
                   Không có kết quả trả về
                 </td>
               </tr>
