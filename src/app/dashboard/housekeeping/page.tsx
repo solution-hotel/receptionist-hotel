@@ -134,120 +134,6 @@ const HouseKeeping = ({
             </tr>
           </thead>
           <tbody>
-            {/* <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                1
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                209
-              </td>
-              <td className="px-6 py-4 text-gray-900">LUXURY</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
-              <td className="px-6 py-4 text-gray-900">BẨN</td>
-              <td className="px-6 py-4 text-gray-900">A THÁI</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                2
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                109
-              </td>
-              <td className="px-6 py-4 text-gray-900">LUXURY</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
-              <td className="px-6 py-4 text-gray-900">BẨN</td>
-              <td className="px-6 py-4 text-gray-900">A THÁI</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                3
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                207
-              </td>
-              <td className="px-6 py-4 text-gray-900">LUXURY</td>
-              <td className="px-6 py-4 text-gray-900">TRỐNG</td>
-              <td className="px-6 py-4 text-gray-900">SẠCH</td>
-              <td className="px-6 py-4 text-gray-900"></td>
-              <td className="px-6 py-4 text-gray-900"></td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                4
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                224
-              </td>
-              <td className="px-6 py-4 text-gray-900">LUXURY</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
-              <td className="px-6 py-4 text-gray-900">BẨN</td>
-              <td className="px-6 py-4 text-gray-900">A THÁI</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                5
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                108
-              </td>
-              <td className="px-6 py-4 text-gray-900">STANDARD</td>
-              <td className="px-6 py-4 text-gray-900">TRỐNG</td>
-              <td className="px-6 py-4 text-gray-900">SẠCH</td>
-              <td className="px-6 py-4 text-gray-900"></td>
-              <td className="px-6 py-4 text-gray-900"></td>
-            </tr>
-            <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-600">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
-              >
-                6
-              </th>
-              <td
-                className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                onClick={() => handleShowPopUpCleaning(true)}
-              >
-                362
-              </td>
-              <td className="px-6 py-4 text-gray-900">LUXURY</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CÓ KHÁCH SỬ DỤNG</td>
-              <td className="px-6 py-4 text-gray-900">BẨN</td>
-              <td className="px-6 py-4 text-gray-900">A THÁI</td>
-              <td className="px-6 py-4 text-gray-900">ĐANG CHỜ</td>
-            </tr> */}
             {dataListRoom.length === 0 ? (
               <tr>
                 <td colSpan={8} className="text-center py-4 text-gray-500">
@@ -257,7 +143,7 @@ const HouseKeeping = ({
             ) : (
               dataListRoom.map((room, index) => (
                 <tr
-                  key={room.Id}
+                  key={index}
                   className="hover:bg-gray-50 dark:hover:bg-gray-200 border-b"
                 >
                   <th
@@ -279,24 +165,30 @@ const HouseKeeping = ({
                     {room.BookingId ? "Đang có khách sử dụng" : "Phòng trống"}
                   </td>
                   <td className="px-6 py-4 text-gray-900">
-                    {room.status === 1 || room.status === 6
-                      ? "Phòng sạch"
-                      : room.status >= 2 && room.status <= 5
+                    {room.Status >= 2 && room.Status <= 5
                       ? "Phòng bẩn"
+                      : room.Status === 1 || room.Status === 6
+                      ? "Phòng sạch"
                       : "Trạng thái không xác định"}
                   </td>
-                  <td className="px-6 py-4 text-gray-900">{`${room.LastName} ${room.FirstName}`}</td>
-                  <td className="px-6 py-4 text-gray-900">
-                    {room.status === 3
-                      ? "Chờ xác nhận"
-                      : room.status === 4
-                      ? "Đã xác nhận"
-                      : room.status === 5
-                      ? "Đang kiểm tra"
-                      : room.status === 6
-                      ? "Hoàn thành"
-                      : "Trạng thái không xác định"}
-                  </td>
+                  {room.BookingId !== 1 && (
+                    <>
+                      <td className="px-6 py-4 text-gray-900">
+                        {`${room.LastName} ${room.FirstName}`}
+                      </td>
+                      <td className="px-6 py-4 text-gray-900">
+                        {room.Status === 3
+                          ? "Chờ xác nhận"
+                          : room.Status === 4
+                          ? "Đã xác nhận"
+                          : room.Status === 5
+                          ? "Đang kiểm tra"
+                          : room.Status === 6
+                          ? "Hoàn thành"
+                          : null}
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))
             )}

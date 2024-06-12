@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  useState,
+  useEffect,
+  ChangeEventHandler,
+} from "react";
 import { MdWindow, MdOutlineAddBox } from "react-icons/md";
 import { FaWindowClose, FaConciergeBell } from "react-icons/fa";
 import ModelCheckout from "./ModelCheckout";
@@ -11,6 +16,7 @@ import {
 import { format } from "date-fns";
 import ClipLoader from "react-spinners/ClipLoader";
 import Swal from "sweetalert2";
+import { DataUpdateBooking } from "@/utils/types/receptionist";
 
 const ModelDetail = ({
   handelShowModel,
@@ -21,7 +27,7 @@ const ModelDetail = ({
   id: number;
   onUpdate: () => void;
 }) => {
-  const [bookingData, setBookingData] = useState({
+  const [bookingData, setBookingData] = useState<DataUpdateBooking>({
     checkinDate: "",
     checkoutDate: "",
     roomType: "",
@@ -32,9 +38,9 @@ const ModelDetail = ({
     maximumCapacity: "",
     numberOfAdults: "",
     numberOfChildren: "",
-    price: "",
+    price: 0,
     RoomNumber: "",
-    Status: "",
+    Status: 0,
   });
   const [showModalCheckout, setShowModalCheckout] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
@@ -45,9 +51,9 @@ const ModelDetail = ({
         const data = await getDetailBooking(id);
         console.log("data before save booking", data);
         setBookingData({
-          checkinDate: data.Data.CheckinDate,
-          checkoutDate: data.Data.CheckoutDate,
-          roomType: data.Data.RoomType.Name,
+          checkinDate: format(new Date(data.Data.CheckinDate), "yyyy-MM-dd"),
+          checkoutDate: format(new Date(data.Data.CheckoutDate), "yyyy-MM-dd"),
+          roomType: data.Data.RoomType.Id,
           firstName: data.Data.Guest.FirstName,
           lastName: data.Data.Guest.LastName,
           email: data.Data.Guest.Email,
@@ -71,38 +77,81 @@ const ModelDetail = ({
     }
   }, [id, isDataLoaded]);
 
-  const getRoomPrice = (roomTypeName) => {
-    switch (roomTypeName) {
-      case "Standard":
-        return 250;
-      case "Single":
-        return 80;
-      case "Double":
-        return 120;
-      case "Twin":
-        return 110;
-      case "Triple":
-        return 150;
-      case "Family":
-        return 200;
+  const getRoomPrice = (roomTypeId: string) => {
+    switch (roomTypeId) {
+      case "3":
+        return Number(250);
+      case "4":
+        return Number(80);
+      case "5":
+        return Number(120);
+      case "6":
+        return Number(110);
+      case "7":
+        return Number(150);
+      case "8":
+        return Number(200);
       default:
-        return 0;
+        return Number(0);
     }
   };
 
-  const handleChange = (e) => {
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   const convertValue = name === "Status" ? parseInt(value) : value;
+  //   if (name === "roomType") {
+  //     const newPrice = getRoomPrice(value);
+  //     setBookingData({ ...bookingData, price: newPrice });
+  //   }
+  //   setBookingData((prevData) => ({ ...prevData, [name]: convertValue }));
+  // };
+
+  // const handleSelectChange: ChangeEventHandler<
+  //   HTMLInputElement | HTMLSelectElement
+  // > = (e) => {
+  //   const { name, value } = e.target;
+  //   if (name === "roomType") {
+  //     const newPrice = getRoomPrice(value);
+  //     setBookingData({ ...bookingData, price: newPrice });
+  //   }
+  //   setBookingData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    const convertValue = name === "Status" ? parseInt(value) : value;
-    if (name === "roomType") {
-      const newPrice = getRoomPrice(value);
-      setBookingData({ ...bookingData, price: newPrice });
+    let convertValue: string | number | Date = value;
+
+    if (name === "Status") {
+      convertValue = parseInt(value);
+    } 
+    else if (name === "checkinDate" || name === "checkoutDate") {
+      convertValue = format(new Date(value), "yyyy-MM-dd");
     }
-    setBookingData((prevData) => ({ ...prevData, [name]: convertValue }));
+
+    setBookingData((prevData) => {
+      const updatedData = {
+        ...prevData,
+        [name]: convertValue,
+      };
+
+      if (name === "roomType") {
+        const newPrice = getRoomPrice(value);
+        return { ...updatedData, price: newPrice } as DataUpdateBooking;
+      }
+
+      return updatedData as DataUpdateBooking;
+    });
   };
 
   const handleSave = async () => {
     setLoading(true);
     try {
+      console.log(bookingData);
       await updateBooking(id, bookingData);
       Swal.fire({
         title: "Thành công!",
@@ -212,13 +261,13 @@ const ModelDetail = ({
                     onChange={handleChange}
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   >
-                    <option value="">Chọn loại phòng</option>
-                    <option value="Standard">Standard</option>
-                    <option value="Single">Single</option>
-                    <option value="Double">Double</option>
-                    <option value="Twin">Twin</option>
-                    <option value="Triple">Triple</option>
-                    <option value="Family">Family</option>
+                  <option value="">Chọn loại phòng</option>
+                  <option value="3">Standard</option>
+                  <option value="4">Single</option>
+                  <option value="5">Double</option>
+                  <option value="6">Twin</option>
+                  <option value="7">Triple</option>
+                  <option value="8">Family</option>
                   </select>
                 </div>
               </div>

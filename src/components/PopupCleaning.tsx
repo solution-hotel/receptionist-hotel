@@ -7,6 +7,7 @@ import {
   getDetailRoom,
 } from "@/utils/api/housekeeping";
 import Swal from "sweetalert2";
+import { ListHousekeeping, DetailRoom } from "@/utils/types/housekeeping";
 
 const PopupCleaning = ({
   handelShowPopUp,
@@ -16,10 +17,14 @@ const PopupCleaning = ({
   id: number;
 }) => {
   const [selectedTask, setSelectedTask] = useState("");
-  const [dataListHouseKeeping, setDatalistHouseKeeping] = useState([]);
+  const [dataListHouseKeeping, setDatalistHouseKeeping] = useState<
+    ListHousekeeping[]
+  >([]);
   const [noResults, setNoResults] = useState(false);
-  const [housekeepingID, setHouseKeepingID] = useState<number | null>(null);
-  const [dataDetailRoom, setDataDetailRoom] = useState({});
+  const [housekeepingID, setHouseKeepingID] = useState<number>(0);
+  const [dataDetailRoom, setDataDetailRoom] = useState<DetailRoom>({
+    Data: {},
+  });
   console.log("-------");
   console.log("This is the data Room ID", id);
 
@@ -63,14 +68,14 @@ const PopupCleaning = ({
     fetchData();
   }, [id, noResults]);
 
-  const roomData = dataDetailRoom.Data ?? {};
+  const roomData = dataDetailRoom?.Data ?? {};
   console.log("-----------------");
   console.log("data data detail Room after saving", dataDetailRoom);
   return (
     <div className="rounded-lg absolute backdrop-filter backdrop-brightness-75 backdrop-blur-md justify-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
       <div className="w-[800px] h-6/6 bg-white rounded-lg shadow-lg">
         <div className="flex justify-end mr-4 pt-4">
-          <FaWindowClose size={25} onClick={() => handelShowPopUp(false)} />
+          <FaWindowClose size={25} onClick={() => handelShowPopUp(false, 0)} />
         </div>
         <div className="my-4 text-black font-bold text-xl flex justify-center">
           Yêu cầu dọn phòng
@@ -86,127 +91,23 @@ const PopupCleaning = ({
           </div>
           <div className="flex">
             <span className="mr-4 font-bold">Tầng:</span>
-            <span>{roomData.flour ? roomData.flour : ""}</span>
+            <span>{roomData.floor ? roomData.floor : ""}</span>
           </div>
           <div className="flex">
             <span className="mr-4 font-bold">Trạng thái phòng:</span>
             <span>
               {roomData.status === 1 || roomData.status === 6
                 ? "Phòng sạch"
-                : roomData.status >= 2 && roomData.status <= 5
+                : roomData.status &&
+                  roomData.status >= 2 &&
+                  roomData.status <= 5
                 ? "Phòng bẩn"
                 : "Trạng thái không xác định"}
             </span>
           </div>
         </div>
-        {/* <div className="w-full px-8 flex flex-col justify-center mt-4">
-          <select
-            id="task-select"
-            value={selectedTask}
-            onChange={(e) => setSelectedTask(e.target.value)}
-            className="mb-4 p-2 rounded border"
-          >
-            <option value="">Chọn tác vụ</option>
-             <option value="inspection">Kiểm phòng</option> 
-            <option value="cleaning">Dọn phòng</option>
-             <option value="both">Kiểm phòng và Dọn phòng</option> 
-          </select>
-           <div
-            id="inspection-select"
-            className={`mb-4 flex flex-col ${
-              selectedTask === "inspection" || selectedTask === "both"
-                ? ""
-                : "hidden"
-            }`}
-          >
-            <label
-              htmlFor="inspection-person"
-              className="mr-2 text-black font-bold"
-            >
-              Chọn người kiểm phòng:
-            </label>
-            <select id="inspection-person" className="p-2 rounded border">
-              <option value="">Chọn người kiểm phòng</option>
-              {dataListHouseKeeping.map((housekeeping) => (
-                <option key={housekeeping.Id} value={housekeeping.Id}>
-                  {housekeeping.FirstName} {housekeeping.LastName}
-                </option>
-              ))}
-            </select>
-          </div> 
-
-          <div
-            id="cleaning-select"
-            className={`mb-4 flex flex-col ${
-              selectedTask === "cleaning" || selectedTask === "both"
-                ? ""
-                : "hidden"
-            }`}
-          >
-            <label
-              htmlFor="cleaning-person"
-              className="mr-2 text-black font-bold"
-            >
-              Chọn người dọn phòng:
-            </label>
-            <select
-              onChange={(e) => setHouseKeepingID(e.target.value)}
-              id="cleaning-person"
-              className="p-2 rounded border"
-            >
-              <option value="">Chọn người dọn phòng</option>
-              {dataListHouseKeeping.map((housekeeping) => (
-                <option key={housekeeping.Id} value={housekeeping.Id}>
-                  {housekeeping.FirstName} {housekeeping.LastName}
-                </option>
-              ))}
-            </select>
-          </div>
-           {selectedTask === "both" && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-1 flex flex-col">
-                <label
-                  htmlFor="inspection-person-both"
-                  className="mr-2 text-black font-bold"
-                >
-                  Chọn người kiểm phòng:
-                </label>
-                <select
-                  id="inspection-person-both"
-                  className="p-2 rounded border"
-                >
-                  <option value="">Chọn người kiểm phòng</option>
-                  {dataListHouseKeeping.map((housekeeping) => (
-                    <option key={housekeeping.Id} value={housekeeping.Id}>
-                      {housekeeping.FirstName} {housekeeping.LastName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-span-1 flex flex-col">
-                <label
-                  htmlFor="cleaning-person-both"
-                  className="mr-2 text-black font-bold"
-                >
-                  Chọn người dọn phòng:
-                </label>
-                <select
-                  id="cleaning-person-both"
-                  className="p-2 rounded border"
-                >
-                  <option value="">Chọn người dọn phòng</option>
-                  {dataListHouseKeeping.map((housekeeping) => (
-                    <option key={housekeeping.Id} value={housekeeping.Id}>
-                      {housekeeping.LastName} {housekeeping.FirstName}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          )}
-        </div> */}
         <div className="w-full px-8 flex flex-col justify-center mt-4">
-          {roomData.status === 1 && (
+          {roomData.status === 2 && (
             <>
               <select
                 id="task-select"
@@ -231,7 +132,7 @@ const PopupCleaning = ({
                   Chọn người dọn phòng:
                 </label>
                 <select
-                  onChange={(e) => setHouseKeepingID(e.target.value)}
+                  onChange={(e) => setHouseKeepingID(Number(e.target.value))}
                   id="cleaning-person"
                   className="p-2 rounded border"
                 >

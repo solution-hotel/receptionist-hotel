@@ -3,7 +3,7 @@ export const baseurl = 'https://api-pnv.bluejaypos.vn';
 export const getListRoom = async (
   page: number
 ) => {
-  const url = `${baseurl}/room/list?housekeeping=&roomType=&floor=&status=&orderBy=&page=${page}&limit=${6}`;
+  const url = `${baseurl}/room/list?housekeeping=&roomType=&floor=&status=&orderBy=&page=${page}&limit=${5}`;
 
   const response = await fetch(url, {
     method:'GET',
