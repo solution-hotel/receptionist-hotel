@@ -85,14 +85,17 @@
 
 
 .sidebar__link.selected  {
-  background-color: black; 
+  /* background-color: #2457C5;  */
 }
 
 .sidebar__link.selected .sidebar__name  {
-  color: white;  
+  /* color: white;   */
+  color: black;
+  font-weight: bold; 
 }
 .sidebar__icon.selected {
-  color: white;  
+  /* color: white;   */
+  color: #2457C5;
 }
 
 [data-collapse ="true"]{

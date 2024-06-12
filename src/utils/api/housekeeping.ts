@@ -3,7 +3,7 @@ export const baseurl = 'https://api-pnv.bluejaypos.vn';
 export const getListRoom = async (
   page: number
 ) => {
-  const url = `${baseurl}/room/list?housekeeping=&roomType=&floor=&status=&orderBy=&page=${page}&limit=${6}`;
+  const url = `${baseurl}/room/list?housekeeping=&roomType=&floor=&status=&orderBy=&page=${page}&limit=${5}`;
 
   const response = await fetch(url, {
     method:'GET',
@@ -43,4 +43,18 @@ export const assignHousekeepingToRoom = async (roomId: number, employeeId: numbe
   const data = await response.json();
   console.log("data response of assign HK", data)
   return data;
+}
+
+export const getDetailRoom = async (id: number) => {
+  const url = `${baseurl}/room/${id}`
+
+  const response = await fetch(url, {
+    method:"GET",
+    headers: {
+      "Content-Type" : "application/json"
+    }
+  })
+
+  const data = await response.json()
+  return data
 }

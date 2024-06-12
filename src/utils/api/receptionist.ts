@@ -1,3 +1,5 @@
+import { DataBooking, DataAddBooking, DataUpdateBooking } from "@/utils/types/receptionist"
+import { log } from "console";
 const baseurl = 'https://api-pnv.bluejaypos.vn';
 // const baseurl = 'http://192.168.10.70:83';
 
@@ -21,7 +23,7 @@ export const loginApi = async (email:string, password:string) => {
     return data;
   };
 
-export const logoutApi = async (token) => {
+export const logoutApi = async (token: string) => {
   const url = `${baseurl}/auth/logout`;
   console.log("data token", token)
   console.log("type of token",typeof token)
@@ -54,7 +56,7 @@ export const getProfile = async (token: string | null | undefined) => {
     return data;
 }
 
-export const listBooking = async (fromDay: Date, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number | null, page: string, limit: number	
+export const listBooking = async (fromDay: Date, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number | null, page: number, limit: number	
 ) => {
   const url = `${baseurl}/booking/list?fromDay=${fromDay}&toDay=${toDay? toDay.toISOString() : ""}&findText=${encodeURIComponent(findText ?? "")}&roomType=${roomType}&roomDetail=${roomDetail}&status=${status}&typeDate=${typeDate}&page=${page}&limit=${limit}`;
 
@@ -88,7 +90,7 @@ export const getDetailBooking = async (id: number) => {
   }
 };
 
-export const addBooking = async (formData) => {
+export const addBooking = async (formData: DataAddBooking) => {
   const url = `${baseurl}/booking/create`;
 
   const bookingData = {
@@ -100,6 +102,7 @@ export const addBooking = async (formData) => {
     Email: formData.email,
     PhoneNumber: formData.phoneNumber,
   };
+  console.log("data ưadd", bookingData)
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -122,7 +125,7 @@ export const addBooking = async (formData) => {
   }
 };
 
-export const updateBooking = async (id, formData) => {
+export const updateBooking = async (id : number, formData: DataUpdateBooking) => {
   const url = `${baseurl}/booking/update?id=${id}`
   const bookingData = {
     CheckinDate: formData.checkinDate,
@@ -134,6 +137,8 @@ export const updateBooking = async (id, formData) => {
     PhoneNumber: formData.phoneNumber,
     Status: formData.Status
   };
+  console.log("ID", id);
+  console.log("This is the data of updated", bookingData);
   try {
     const response = await fetch(url,{
       method:'PATCH',
@@ -156,7 +161,7 @@ export const updateBooking = async (id, formData) => {
   }
 };
 
-export const cancelBooking = async (id) => {
+export const cancelBooking = async (id: number) => {
   const url = `${baseurl}/booking/cancel?id=${id}`;
 
   const response = await fetch(url, {
@@ -172,3 +177,18 @@ export const cancelBooking = async (id) => {
   return data;
 }
 
+
+export const sendMailBooking = async (email:string, name: string, bookingId: number) => {
+  const url = `${baseurl}/api/email/send`
+
+  const response = await fetch(url, {
+    headers:{
+      "Content-Type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify({ToEmail: email, CustomerName : name, BookingDetails: bookingId})
+  })
+
+  const data = await response.json();
+  return data;
+}

@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import React, { useState, useContext } from "react";
-import { MdPersonPin, MdPersonOutline, MdArrowBackIos } from "react-icons/md";
+import {
+  MdPersonPin,
+  MdPersonOutline,
+  MdArrowBackIos,
+  MdArticle,
+  MdDehaze,
+} from "react-icons/md";
 import Image from "next/image";
 import { SidebarContext } from "./SidebarContext";
 
@@ -30,14 +36,14 @@ const Sidebar = () => {
   return (
     <div className="sidebar__wrapper">
       <button className="btn" onClick={toggleSidebarCollappseHandle}>
-        <MdArrowBackIos />
+        <MdDehaze />
       </button>
       <aside className="sidebar" data-collapse={isCollapsedSidebar}>
         <div className="sidebar__top">
           <Image
-            width={80}
-            height={80}
-            src="/next.svg"
+            width={500}
+            height={500}
+            src="/logo.png"
             className="sidebar__logo"
             alt={""}
           />
