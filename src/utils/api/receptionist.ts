@@ -1,3 +1,5 @@
+import { DataBooking, DataAddBooking, DataUpdateBooking } from "@/utils/types/receptionist"
+import { log } from "console";
 const baseurl = 'https://api-pnv.bluejaypos.vn';
 // const baseurl = 'http://192.168.10.70:83';
 
@@ -88,7 +90,7 @@ export const getDetailBooking = async (id: number) => {
   }
 };
 
-export const addBooking = async (formData) => {
+export const addBooking = async (formData: DataAddBooking) => {
   const url = `${baseurl}/booking/create`;
 
   const bookingData = {
@@ -100,6 +102,7 @@ export const addBooking = async (formData) => {
     Email: formData.email,
     PhoneNumber: formData.phoneNumber,
   };
+  console.log("data ưadd", bookingData)
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -122,7 +125,7 @@ export const addBooking = async (formData) => {
   }
 };
 
-export const updateBooking = async (id, formData) => {
+export const updateBooking = async (id : number, formData: DataUpdateBooking) => {
   const url = `${baseurl}/booking/update?id=${id}`
   const bookingData = {
     CheckinDate: formData.checkinDate,
@@ -134,6 +137,8 @@ export const updateBooking = async (id, formData) => {
     PhoneNumber: formData.phoneNumber,
     Status: formData.Status
   };
+  console.log("ID", id);
+  console.log("This is the data of updated", bookingData);
   try {
     const response = await fetch(url,{
       method:'PATCH',

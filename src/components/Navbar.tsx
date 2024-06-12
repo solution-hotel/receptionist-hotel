@@ -11,14 +11,14 @@ import { logoutUser } from "@/store/reducers/userloginReducer";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
   const dispatch = useDispatch();
   const router = useRouter();
   const dataUser = useSelector((state: RootState) => state.userlogin.login);
-  const token = dataUser?.token;
+  const token = dataUser?.token ?? "";
   const [userProfile, setUserProfile] = useState<UserProfile | null>();
   const getData = useCallback(async () => {
     try {
@@ -50,8 +50,11 @@ const Navbar = () => {
   }, [getData, token]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
     };
@@ -75,7 +78,7 @@ const Navbar = () => {
               {userProfile.LastName} {userProfile.FirstName}
             </>
           ) : (
-            "Loading..."
+            "Đang tải..."
           )}
         </div>
         <div className="relative flex items-center">

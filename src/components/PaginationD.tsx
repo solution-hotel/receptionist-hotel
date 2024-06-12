@@ -24,7 +24,7 @@ const PaginationD: FC = () => {
     onPrevious,
     setPage,
     className,
-  }: PaginationItemRenderProps<HTMLButtonElement>) => {
+  }: PaginationItemRenderProps) => {
     const handleClick = (newPage: number) => {
       setPage(newPage);
       const params = new URLSearchParams(searchParams.toString());
@@ -87,18 +87,16 @@ const PaginationD: FC = () => {
       // >
       //   {value}
       // </button>
-            <button
-            ref={ref}
-            key={key}
-            className={`${
-              isActive
-                ? "text-white bg-[#418DFF] font-bold"
-                : ""
-            } px-3 py-1`}
-            onClick={() => handleClick(value)}
-          >
-            {value}
-          </button>
+      <button
+        ref={ref}
+        key={key}
+        className={`${
+          isActive ? "text-white bg-[#418DFF] font-bold" : ""
+        } px-3 py-1`}
+        onClick={() => handleClick(value)}
+      >
+        {value}
+      </button>
     );
   };
 
@@ -109,6 +107,7 @@ const PaginationD: FC = () => {
         showControls
         total={5}
         page={currentPage}
+        boundaries={1}
         className="gap-2"
         radius="full"
         renderItem={renderItem}

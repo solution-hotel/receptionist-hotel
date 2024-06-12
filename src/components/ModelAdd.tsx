@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, ChangeEventHandler } from "react";
 import { MdClose } from "react-icons/md";
 import { FaWindowClose, FaConciergeBell } from "react-icons/fa";
 import { addBooking } from "@/utils/api/receptionist";
 import Swal from "sweetalert2";
+import { DataBooking } from "@/utils/types/receptionist";
 
 const ModelAdd = ({
   handelShowModel,
@@ -19,34 +20,48 @@ const ModelAdd = ({
     quantity: 1,
     email: "",
     children: 0,
-    price: "",
+    price: 0,
     checkinDate: "",
     checkoutDate: "",
     message: "",
   });
 
-  const getRoomPrice = (roomTypeId) => {
+  const getRoomPrice = (roomTypeId: string) => {
     switch (roomTypeId) {
       case "3":
-        return 250;
+        return Number(250);
       case "4":
-        return 80;
+        return Number(80);
       case "5":
-        return 120;
+        return Number(120);
       case "6":
-        return 110;
+        return Number(110);
       case "7":
-        return 150;
+        return Number(150);
       case "8":
-        return 200;
+        return Number(200);
       default:
-        return 0;
+        return Number(0);
     }
   };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const { name, value } = e.target;
+    if (name === "roomType") {
+      const newPrice = getRoomPrice(value);
+      setFormData({ ...formData, price: newPrice });
+    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSelectChange: ChangeEventHandler<
+    HTMLInputElement | HTMLSelectElement
+  > = (e) => {
     const { name, value } = e.target;
     if (name === "roomType") {
       const newPrice = getRoomPrice(value);
@@ -86,27 +101,27 @@ const ModelAdd = ({
             <div>
               <div className="grid grid-cols-2 gap-2 mb-4">
                 <div className="flex flex-col flex-grow">
-                  <label htmlFor="firstName">Họ</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
-                  />
-                </div>
-                <div className="flex flex-col flex-grow">
-                  <label htmlFor="lastName">Tên</label>
+                  <label htmlFor="lastName">Họ</label>
                   <input
                     type="text"
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
+                    className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                  />
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <label htmlFor="firstName">Tên</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
                     className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 justify-end rounded-md"
                   />
                 </div>
               </div>
-              <div className="flex flex-col mb-4">
+              {/* <div className="flex flex-col mb-4">
                 <label htmlFor="numberOfPeople">Số lượng người</label>
                 <input
                   type="number"
@@ -115,13 +130,13 @@ const ModelAdd = ({
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
-              </div>
+              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="roomType">Loại Phòng</label>
                 <select
                   name="roomType"
                   value={formData.roomType}
-                  onChange={handleChange}
+                  onChange={handleSelectChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 >
                   <option value="">Chọn loại phòng</option>
@@ -145,7 +160,7 @@ const ModelAdd = ({
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
               </div>
-              <div className="flex flex-col mb-4">
+              {/* <div className="flex flex-col mb-4">
                 <label htmlFor="adults">Người lớn</label>
                 <input
                   type="number"
@@ -154,7 +169,7 @@ const ModelAdd = ({
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
-              </div>
+              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="quantity">Số lượng</label>
                 <input
@@ -177,7 +192,7 @@ const ModelAdd = ({
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
               </div>
-              <div className="flex flex-col mb-4">
+              {/* <div className="flex flex-col mb-4">
                 <label htmlFor="children">Trẻ em</label>
                 <input
                   type="number"
@@ -186,7 +201,7 @@ const ModelAdd = ({
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
-              </div>
+              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="price">Giá</label>
                 <input
