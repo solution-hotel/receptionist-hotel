@@ -90,7 +90,8 @@ const ModelDetail = ({
 
         console.log("Booking Items:", detailData.Data.BookingItems);
         const totalServicePrice = detailData.Data.BookingItems.reduce(
-          (total, item) => total + item.TotalPrice,
+          (total: number, item: { TotalPrice: number }) =>
+            total + item.TotalPrice,
           0
         );
         setTotalServicePrice(totalServicePrice);
@@ -506,10 +507,14 @@ const ModelDetail = ({
                     </td>
                   </tr>
                 ) : (
-                  bookingItems.map((bookingItem, i) => {
+                  bookingItems.map((bookingItem: any, i) => {
                     const item = extraItems.find(
-                      (item) => item.id === bookingItem.ItemId
+                      (item: any) => item.id === bookingItem.ItemId
                     );
+
+                    if (!item) {
+                      return null;
+                    }
 
                     return (
                       <tr
@@ -522,8 +527,8 @@ const ModelDetail = ({
                         >
                           {i + 1}
                         </th>
-                        <td className="px-6 py-4">{item?.name}</td>
-                        <td className="px-6 py-4">{item?.price}</td>
+                        <td className="px-6 py-4">{(item as any)?.name}</td>
+                        <td className="px-6 py-4">{(item as any)?.price}</td>
                         <td className="px-6 py-4">{bookingItem.Quantity}</td>
                         <td className="px-6 py-4 text-right">
                           {bookingItem.TotalPrice}

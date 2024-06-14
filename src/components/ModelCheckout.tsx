@@ -5,7 +5,13 @@ import { format } from "date-fns";
 import { getDetailBooking, paymentBooking } from "@/utils/api/receptionist";
 import Swal from "sweetalert2";
 
-const ModelCheckout = ({ handelShowModel, id }) => {
+const ModelCheckout = ({
+  handelShowModel,
+  id,
+}: {
+  handelShowModel: (show: boolean, id: number) => void;
+  id: number;
+}) => {
   const [bookingData, setBookingData] = useState({
     checkinDate: "",
     checkoutDate: "",
@@ -60,7 +66,8 @@ const ModelCheckout = ({ handelShowModel, id }) => {
         console.log("Booking Items:", bookingDetail.BookingItems);
 
         const totalServicePrice = bookingDetail.BookingItems.reduce(
-          (total, item) => total + item.TotalPrice,
+          (total: number, item: { TotalPrice: number }) =>
+            total + item.TotalPrice,
           0
         );
         setTotalServicePrice(totalServicePrice);
@@ -209,7 +216,7 @@ const ModelCheckout = ({ handelShowModel, id }) => {
               </thead>
               <tbody>
                 {bookingItems.length > 0 ? (
-                  bookingItems.map((item, index) => (
+                  bookingItems.map((item: any, index: number) => (
                     <tr
                       key={index}
                       className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300"

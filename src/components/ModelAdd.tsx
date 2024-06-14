@@ -3,7 +3,7 @@ import { MdClose } from "react-icons/md";
 import { FaWindowClose, FaConciergeBell } from "react-icons/fa";
 import { addBooking } from "@/utils/api/receptionist";
 import Swal from "sweetalert2";
-import { DataBooking } from "@/utils/types/receptionist";
+import { FormDataValidate } from "@/utils/types/receptionist";
 
 const ModelAdd = ({
   handelShowModel,
@@ -25,9 +25,9 @@ const ModelAdd = ({
     checkoutDate: "",
     message: "",
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Partial<FormDataValidate>>({});
   const validateForm = () => {
-    const newErrors = {};
+    const newErrors: Partial<FormDataValidate> = {};
 
     if (!formData.lastName) newErrors.lastName = "Họ là bắt buộc";
     if (!formData.firstName) newErrors.firstName = "Tên là bắt buộc";
