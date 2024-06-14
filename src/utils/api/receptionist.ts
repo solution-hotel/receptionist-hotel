@@ -56,7 +56,7 @@ export const getProfile = async (token: string | null | undefined) => {
     return data;
 }
 
-export const listBooking = async (fromDay: Date, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number | null, page: number, limit: number	
+export const listBooking = async (fromDay: Date | null, toDay: Date | null, findText: string | null, roomType: number | null, roomDetail: number | null, status: number | null, typeDate: number, page: number, limit: number	
 ) => {
   const url = `${baseurl}/booking/list?fromDay=${fromDay}&toDay=${toDay? toDay.toISOString() : ""}&findText=${encodeURIComponent(findText ?? "")}&roomType=${roomType}&roomDetail=${roomDetail}&status=${status}&typeDate=${typeDate}&page=${page}&limit=${limit}`;
 
@@ -67,6 +67,8 @@ export const listBooking = async (fromDay: Date, toDay: Date | null, findText: s
         }
   })
     const data = await response.json();
+    console.log("Data response of list booking",data);
+    
     return data;
 }
 
@@ -177,18 +179,51 @@ export const cancelBooking = async (id: number) => {
   return data;
 }
 
+export const sendMailBooking = async (email: string, name: string, bookingId: number) => {
+  const url = `${baseurl}/api/email/send`;
 
-export const sendMailBooking = async (email:string, name: string, bookingId: number) => {
-  const url = `${baseurl}/api/email/send`
+  const body = {
+    ToEmail: email,
+    CustomerName: name,
+    BookingDetails: bookingId
+  };
 
   const response = await fetch(url, {
-    headers:{
+    headers: {
       "Content-Type": "application/json"
     },
     method: "POST",
-    body: JSON.stringify({ToEmail: email, CustomerName : name, BookingDetails: bookingId})
-  })
+    body: JSON.stringify(body)
+  });
 
   const data = await response.json();
   return data;
+}
+
+export const paymentBooking = async (id: number) => {
+    const url = `${baseurl}/payment?id=${id}`
+    
+    const response = await fetch (url, {
+      headers : {
+        "Content-Type" : "application/json"
+      },
+      method: "POST"
+    })
+
+    const data = await response.json();
+    return data
+}
+
+export const getExtraitems = async () => {
+  const url = `${baseurl}/extraitems/getall`
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: "GET"
+  })
+
+  const data = await response.json();
+  return data
 }

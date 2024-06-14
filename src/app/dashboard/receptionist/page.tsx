@@ -24,6 +24,7 @@ export default function Receptionist({
   const [searchInput, setSearchInput] = useState("");
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [typeDate, setTypeDate] = useState(0);
   const handleShowModelAdd = (show: boolean) => {
     setShowModalAdd(show);
   };
@@ -35,8 +36,6 @@ export default function Receptionist({
   const handleDataUpdate = () => {
     setDataUpdated((prev) => !prev);
   };
-
-  const fromDay = useMemo(() => new Date(), []);
 
   const pageString = Array.isArray(searchParams["page"])
     ? searchParams["page"][0]
@@ -64,13 +63,13 @@ export default function Receptionist({
       try {
         setLoading(true);
         const data = await listBooking(
-          fromDay,
+          null,
           null,
           search,
           null,
           null,
           null,
-          null,
+          typeDate,
           page,
           6
         );
@@ -92,7 +91,7 @@ export default function Receptionist({
     };
 
     fetchData(search);
-  }, [fromDay, showModalDetail, dataUpdated, page, search]);
+  }, [showModalDetail, dataUpdated, typeDate, page, search]);
 
   return (
     <div className="w-full h-full">
@@ -130,18 +129,38 @@ export default function Receptionist({
       <div className="relative overflow-x-auto shadow-md px-4 bg-white my-4">
         <div className="flex gap-6 content-center items-center justify-around border-b-4 relative">
           <div className="flex gap-8 text-sm">
-            <div className="text-right">
-              <div>ĐẶT PHÒNG CHỜ NHẬN TRONG NGÀY</div>
-              <div className="absolute top-0 left-0 right-0 h-16 w-72 border-b-4 border-black"></div>
+            <div>
+              <div
+                style={{
+                  color: typeDate === 0 ? "blue" : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => setTypeDate(0)}
+              >
+                TẤT CẢ
+              </div>
             </div>
             <div>
-              <div>ĐẶT PHÒNG CHỜ TRẢ TRONG NGÀY</div>
+              <div
+                style={{
+                  color: typeDate === 1 ? "blue" : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => setTypeDate(1)}
+              >
+                ĐẶT PHÒNG CHỜ NHẬN TRONG NGÀY
+              </div>
             </div>
-            {/* <div>
-              <div>PHÒNG ĐANG SỬ DỤNG</div>
-            </div> */}
             <div>
-              <div>TẤT CẢ</div>
+              <div
+                style={{
+                  color: typeDate === 2 ? "blue" : "black",
+                  cursor: "pointer",
+                }}
+                onClick={() => setTypeDate(2)}
+              >
+                ĐẶT PHÒNG CHỜ TRẢ TRONG NGÀY
+              </div>
             </div>
           </div>
           <div>
@@ -228,7 +247,7 @@ export default function Receptionist({
             ) : (
               dataListBooking.map((booking, index) => (
                 <tr
-                  key={booking.id}
+                  key={booking.id || booking.Id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-200 border-b"
                 >
                   <th
@@ -239,25 +258,29 @@ export default function Receptionist({
                   </th>
                   <td
                     className="px-6 py-4 text-blue-600 dark:text-blue-500 hover:underline cursor-pointer"
-                    onClick={() => handleShowModelDetail(true, booking.id)}
+                    onClick={() =>
+                      handleShowModelDetail(true, booking.id || booking.Id)
+                    }
                   >
-                    {booking.id}
+                    {booking.id || booking.Id}
                   </td>
-                  <td className="px-6 py-4 text-gray-900">{`${booking.lastName} ${booking.firstName}`}</td>
+                  <td className="px-6 py-4 text-gray-900">{`${
+                    booking.lastName || booking.LastName || "Bùi"
+                  } ${booking.firstName || booking.FirstName || "Hoàn"}`}</td>
                   <td className="px-6 py-4 text-gray-900">
-                    {booking.phoneNumber}
-                  </td>
-                  <td className="px-6 py-4 text-gray-900">
-                    {booking.typeRoomName}
-                  </td>
-                  <td className="px-6 py-4 text-gray-900">
-                    {booking.roomNumber}
+                    {booking.phoneNumber || booking.PhoneNumber || "0931990829"}
                   </td>
                   <td className="px-6 py-4 text-gray-900">
-                    {formatDate(booking.checkinDate)}
+                    {booking.typeRoomName || booking.TypeRoomName || "Standard"}
                   </td>
                   <td className="px-6 py-4 text-gray-900">
-                    {formatDate(booking.checkoutDate)}
+                    {booking.roomNumber || booking.RoomNumber || "102"}
+                  </td>
+                  <td className="px-6 py-4 text-gray-900">
+                    {formatDate(booking.checkinDate || booking.CheckinDate)}
+                  </td>
+                  <td className="px-6 py-4 text-gray-900">
+                    {formatDate(booking.checkoutDate || booking.CheckoutDate)}
                   </td>
                 </tr>
               ))

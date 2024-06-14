@@ -25,6 +25,31 @@ const ModelAdd = ({
     checkoutDate: "",
     message: "",
   });
+  const [errors, setErrors] = useState({});
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.lastName) newErrors.lastName = "Họ là bắt buộc";
+    if (!formData.firstName) newErrors.firstName = "Tên là bắt buộc";
+    if (!formData.roomType) newErrors.roomType = "Loại phòng là bắt buộc";
+    if (!formData.phoneNumber) {
+      newErrors.phoneNumber = "Số điện thoại là bắt buộc";
+    } else if (!/^\d{10,11}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Số điện thoại không hợp lệ";
+    }
+    if (!formData.email) {
+      newErrors.email = "Email là bắt buộc";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email không hợp lệ";
+    }
+    if (!formData.checkinDate)
+      newErrors.checkinDate = "Ngày nhận phòng là bắt buộc";
+    if (!formData.checkoutDate)
+      newErrors.checkoutDate = "Ngày trả phòng là bắt buộc";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const getRoomPrice = (roomTypeId: string) => {
     switch (roomTypeId) {
@@ -72,20 +97,27 @@ const ModelAdd = ({
       [name]: value,
     }));
   };
-
   const handleSubmit = async () => {
-    try {
-      const result = await addBooking(formData);
-      console.log("Form Data Submitted: ", result);
-      Swal.fire({
-        title: "Thành công!",
-        text: "Đặt phòng thành công.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-      handelShowModel(false);
-    } catch (error) {
-      console.error("Lỗi khi gửi form: ", error);
+    if (validateForm()) {
+      try {
+        const result = await addBooking(formData);
+        console.log("Form Data Submitted: ", result);
+        Swal.fire({
+          title: "Thành công!",
+          text: "Đặt phòng thành công.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        handelShowModel(false);
+      } catch (error) {
+        console.error("Lỗi khi gửi form: ", error);
+        Swal.fire({
+          title: "Lỗi!",
+          text: "Đặt phòng không thành công. Vui lòng thử lại.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
     }
   };
 
@@ -109,6 +141,9 @@ const ModelAdd = ({
                     onChange={handleChange}
                     className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   />
+                  {errors.lastName && (
+                    <span className="text-red-500">{errors.lastName}</span>
+                  )}
                 </div>
                 <div className="flex flex-col flex-grow">
                   <label htmlFor="firstName">Tên</label>
@@ -119,18 +154,11 @@ const ModelAdd = ({
                     onChange={handleChange}
                     className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 justify-end rounded-md"
                   />
+                  {errors.firstName && (
+                    <span className="text-red-500">{errors.firstName}</span>
+                  )}
                 </div>
               </div>
-              {/* <div className="flex flex-col mb-4">
-                <label htmlFor="numberOfPeople">Số lượng người</label>
-                <input
-                  type="number"
-                  name="numberOfPeople"
-                  value={formData.numberOfPeople}
-                  onChange={handleChange}
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
-                />
-              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="roomType">Loại Phòng</label>
                 <select
@@ -147,6 +175,9 @@ const ModelAdd = ({
                   <option value="7">Triple</option>
                   <option value="8">Family</option>
                 </select>
+                {errors.roomType && (
+                  <span className="text-red-500">{errors.roomType}</span>
+                )}
               </div>
             </div>
             <div>
@@ -159,17 +190,10 @@ const ModelAdd = ({
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
+                {errors.phoneNumber && (
+                  <span className="text-red-500">{errors.phoneNumber}</span>
+                )}
               </div>
-              {/* <div className="flex flex-col mb-4">
-                <label htmlFor="adults">Người lớn</label>
-                <input
-                  type="number"
-                  name="adults"
-                  value={formData.adults}
-                  onChange={handleChange}
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
-                />
-              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="quantity">Số lượng</label>
                 <input
@@ -191,17 +215,10 @@ const ModelAdd = ({
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                 />
+                {errors.email && (
+                  <span className="text-red-500">{errors.email}</span>
+                )}
               </div>
-              {/* <div className="flex flex-col mb-4">
-                <label htmlFor="children">Trẻ em</label>
-                <input
-                  type="number"
-                  name="children"
-                  value={formData.children}
-                  onChange={handleChange}
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
-                />
-              </div> */}
               <div className="flex flex-col mb-4">
                 <label htmlFor="price">Giá</label>
                 <input
@@ -229,6 +246,9 @@ const ModelAdd = ({
                 onChange={handleChange}
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
+              {errors.checkinDate && (
+                <span className="text-red-500">{errors.checkinDate}</span>
+              )}
             </div>
             <div className="flex flex-col">
               <label htmlFor="checkoutDate">Ngày trả phòng</label>
@@ -239,6 +259,9 @@ const ModelAdd = ({
                 onChange={handleChange}
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
+              {errors.checkoutDate && (
+                <span className="text-red-500">{errors.checkoutDate}</span>
+              )}
             </div>
           </div>
           <div>

@@ -4,10 +4,10 @@ import { BsPersonCircle } from "react-icons/bs";
 import { MdArrowDropDown, MdLogout, MdExpandCircleDown } from "react-icons/md";
 import { getProfile, logoutApi } from "./../utils/api/receptionist";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { RootState } from "../store";
 import { UserProfile } from "../utils/types/user";
 import { useRouter } from "next/navigation";
-import { logoutUser } from "@/store/reducers/userloginReducer";
+import { logoutUser } from "../store/reducers/userloginReducer";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import ClipLoader from "react-spinners/ClipLoader";
 import Swal from "sweetalert2";
 import { DataUpdateBooking } from "@/utils/types/receptionist";
+import { getExtraitems } from "./../utils/api/receptionist";
 
 const ModelDetail = ({
   handelShowModel,
@@ -41,31 +42,58 @@ const ModelDetail = ({
     price: 0,
     RoomNumber: "",
     Status: 0,
+    Id: 0,
   });
+  const [bookingItems, setBookingItems] = useState([]);
+  const [bookingID, setBookingID] = useState<number>(0);
+  const [totalServicePrice, setTotalServicePrice] = useState(0);
+  const [extraItems, setExtraItems] = useState([]);
   const [showModalCheckout, setShowModalCheckout] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getDetailBooking(id);
-        console.log("data before save booking", data);
+        const [detailData, extraItemsData] = await Promise.all([
+          getDetailBooking(id),
+          getExtraitems(),
+        ]);
+
+        console.log("Data before save booking", detailData);
         setBookingData({
-          checkinDate: format(new Date(data.Data.CheckinDate), "yyyy-MM-dd"),
-          checkoutDate: format(new Date(data.Data.CheckoutDate), "yyyy-MM-dd"),
-          roomType: data.Data.RoomType.Id,
-          firstName: data.Data.Guest.FirstName,
-          lastName: data.Data.Guest.LastName,
-          email: data.Data.Guest.Email,
-          phoneNumber: data.Data.Guest.PhoneNumber,
-          maximumCapacity: data.Data.RoomType.MaximumCapacity,
-          numberOfAdults: data.Data.RoomType.NumberOfAdults,
-          numberOfChildren: data.Data.RoomType.NumberOfChildren,
-          price: data.Data.RoomType.Price,
-          RoomNumber: data.Data.Room ? data.Data.Room.RoomNumber || "" : "",
-          Status: data.Data.Status,
+          checkinDate: format(
+            new Date(detailData.Data.CheckinDate),
+            "yyyy-MM-dd"
+          ),
+          checkoutDate: format(
+            new Date(detailData.Data.CheckoutDate),
+            "yyyy-MM-dd"
+          ),
+          roomType: detailData.Data.RoomType.Id,
+          firstName: detailData.Data.Guest.FirstName,
+          lastName: detailData.Data.Guest.LastName,
+          email: detailData.Data.Guest.Email,
+          phoneNumber: detailData.Data.Guest.PhoneNumber,
+          maximumCapacity: detailData.Data.RoomType.MaximumCapacity,
+          numberOfAdults: detailData.Data.RoomType.NumberOfAdults,
+          numberOfChildren: detailData.Data.RoomType.NumberOfChildren,
+          price: detailData.Data.RoomType.Price,
+          RoomNumber: detailData.Data.Room
+            ? detailData.Data.Room.RoomNumber || ""
+            : "",
+          Status: detailData.Data.Status,
+          Id: detailData.Data.Id,
         });
-        console.log("data booking", data);
+        setBookingItems(detailData.Data.BookingItems);
+        setExtraItems(extraItemsData.Data);
+
+        console.log("Booking Items:", detailData.Data.BookingItems);
+        const totalServicePrice = detailData.Data.BookingItems.reduce(
+          (total, item) => total + item.TotalPrice,
+          0
+        );
+        setTotalServicePrice(totalServicePrice);
         setIsDataLoaded(true);
       } catch (error) {
         console.error("Error fetching booking detail:", error);
@@ -76,6 +104,8 @@ const ModelDetail = ({
       fetchData();
     }
   }, [id, isDataLoaded]);
+
+  const totalPrice = bookingData.price + totalServicePrice;
 
   const getRoomPrice = (roomTypeId: string) => {
     switch (roomTypeId) {
@@ -128,8 +158,7 @@ const ModelDetail = ({
 
     if (name === "Status") {
       convertValue = parseInt(value);
-    } 
-    else if (name === "checkinDate" || name === "checkoutDate") {
+    } else if (name === "checkinDate" || name === "checkoutDate") {
       convertValue = format(new Date(value), "yyyy-MM-dd");
     }
 
@@ -168,16 +197,28 @@ const ModelDetail = ({
   const handleSendMail = async () => {
     setLoading(true);
     try {
-      await sendMailBooking(bookingData.email, bookingData.firstName, id);
+      await sendMailBooking(
+        bookingData.email,
+        bookingData.firstName + " " + bookingData.lastName,
+        id
+      );
       Swal.fire({
         title: "Thành công!",
-        text: "Cập nhật đặt phòng thành công.",
+        text: "Gửi email đặt phòng thành công.",
         icon: "success",
         confirmButtonText: "OK",
       });
       handelShowModel(false, 0);
     } catch (error) {
       console.error("Error send mail booking:", error);
+      Swal.fire({
+        title: "Thất bại!",
+        text: "Gửi email đặt phòng thất bại. Vui lòng thử lại sau.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -196,7 +237,8 @@ const ModelDetail = ({
     }
   };
 
-  const handleShowModelCheckout = (show: boolean) => {
+  const handleShowModelCheckout = (show: boolean, id: number) => {
+    setBookingID(id);
     setShowModalCheckout(show);
   };
   return (
@@ -261,13 +303,13 @@ const ModelDetail = ({
                     onChange={handleChange}
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   >
-                  <option value="">Chọn loại phòng</option>
-                  <option value="3">Standard</option>
-                  <option value="4">Single</option>
-                  <option value="5">Double</option>
-                  <option value="6">Twin</option>
-                  <option value="7">Triple</option>
-                  <option value="8">Family</option>
+                    <option value="">Chọn loại phòng</option>
+                    <option value="3">Standard</option>
+                    <option value="4">Single</option>
+                    <option value="5">Double</option>
+                    <option value="6">Twin</option>
+                    <option value="7">Triple</option>
+                    <option value="8">Family</option>
                   </select>
                 </div>
               </div>
@@ -350,7 +392,7 @@ const ModelDetail = ({
               <div className="flex flex-col">
                 <label htmlFor="numberRoom">Số phòng</label>
                 <input
-                  value={bookingData.RoomNumber || ""}
+                  value={bookingData.RoomNumber || "102"}
                   type="text"
                   name="RoomNumber"
                   id="numberRoom"
@@ -457,50 +499,49 @@ const ModelDetail = ({
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
-                  >
-                    1
-                  </th>
-                  <td className="px-6 py-4">Nước ngọt</td>
-                  <td className="px-6 py-4">12,000</td>
-                  <td className="px-6 py-4">2</td>
-                  <td className="px-6 py-4">24,00</td>
-                  <td className="px-6 py-4 text-right">
-                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                      Sửa
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <a className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">
-                      Xóa
-                    </a>
-                  </td>
-                </tr>
-                <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
-                  >
-                    2
-                  </th>
-                  <td className="px-6 py-4">Bánh tráng</td>
-                  <td className="px-6 py-4">25,000</td>
-                  <td className="px-6 py-4">2</td>
-                  <td className="px-6 py-4">50,000</td>
-                  <td className="px-6 py-4 text-right">
-                    <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
-                      Sửa
-                    </a>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <a className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">
-                      Xóa
-                    </a>
-                  </td>
-                </tr>
+                {bookingItems.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="text-center py-4">
+                      Chưa sử dụng dịch vụ nào
+                    </td>
+                  </tr>
+                ) : (
+                  bookingItems.map((bookingItem, i) => {
+                    const item = extraItems.find(
+                      (item) => item.id === bookingItem.ItemId
+                    );
+
+                    return (
+                      <tr
+                        key={i}
+                        className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300"
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
+                        >
+                          {i + 1}
+                        </th>
+                        <td className="px-6 py-4">{item?.name}</td>
+                        <td className="px-6 py-4">{item?.price}</td>
+                        <td className="px-6 py-4">{bookingItem.Quantity}</td>
+                        <td className="px-6 py-4 text-right">
+                          {bookingItem.TotalPrice}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
+                            Sửa
+                          </a>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <a className="font-medium text-red-600 dark:text-red-500 hover:underline cursor-pointer">
+                            Xóa
+                          </a>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
               </tbody>
             </table>
           </div>
@@ -510,18 +551,24 @@ const ModelDetail = ({
         </div>
         <div className="mx-8">
           <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#E8E8E8              ] bg-opacity-20">
-            <div className="flex justify-end">
-              <span className="mr-[100px] font-bold">Tiền phòng</span>
-              <span className="font-bold">500,000 VNĐ</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="mr-[95px] font-bold">Tiền dịch vụ</span>
-              <span className="font-bold">100,000 VNĐ</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="mr-[100px] font-bold">Tổng tiền</span>
-              <span className="font-bold">1,500,000 VNĐ</span>
-            </div>
+            {bookingData.price && (
+              <div className="flex justify-end">
+                <span className="mr-[100px] font-bold">Tiền phòng</span>
+                <span className="font-bold">{`${bookingData.price},000 VNĐ`}</span>
+              </div>
+            )}
+            {totalServicePrice > 0 && (
+              <div className="flex justify-end">
+                <span className="mr-[95px] font-bold">Tiền dịch vụ</span>
+                <span className="font-bold">{`${totalServicePrice},000 VNĐ`}</span>
+              </div>
+            )}
+            {totalPrice && (
+              <div className="flex justify-end">
+                <span className="mr-[100px] font-bold">Tổng tiền</span>
+                <span className="font-bold">{`${totalPrice},000 VNĐ`}</span>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex justify-center gap-4 my-4">
@@ -536,7 +583,7 @@ const ModelDetail = ({
           </div>
           <div>
             <button
-              onClick={() => handleShowModelCheckout(true)}
+              onClick={() => handleShowModelCheckout(true, bookingData.Id)}
               type="button"
               className="focus:outline-none text-white bg-[#FBC252] hover:bg-[#FFB100] font-medium rounded-lg text-sm px-5 py-2.5"
             >
@@ -572,7 +619,10 @@ const ModelDetail = ({
         </div>
       </div>
       {showModalCheckout && (
-        <ModelCheckout handelShowModel={handleShowModelCheckout} />
+        <ModelCheckout
+          handelShowModel={handleShowModelCheckout}
+          id={bookingID}
+        />
       )}
     </div>
   );

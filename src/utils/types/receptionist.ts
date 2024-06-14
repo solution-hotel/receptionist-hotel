@@ -59,4 +59,5 @@ export interface DataUpdateBooking {
     price: number,
     RoomNumber: string,
     Status: number,
+    Id: number,
 }
