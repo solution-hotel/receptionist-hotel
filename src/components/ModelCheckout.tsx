@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { MdWindow, MdBedroomParent } from "react-icons/md";
 import { FaWindowClose, FaConciergeBell } from "react-icons/fa";
 import { format } from "date-fns";
-import { getDetailBooking, paymentBooking } from "@/utils/api/receptionist";
+import {
+  getDetailBooking,
+  paymentBooking,
+  getExtraitems,
+} from "@/utils/api/receptionist";
 import Swal from "sweetalert2";
 
 const ModelCheckout = ({
@@ -30,12 +34,18 @@ const ModelCheckout = ({
   });
   const [bookingItems, setBookingItems] = useState([]);
   const [totalServicePrice, setTotalServicePrice] = useState(0);
+  const [extraItems, setExtraItems] = useState([]);
 
   useEffect(() => {
-    let isMounted = true; // Flag to check if component is still mounted
+    let isMounted = true;
 
     const fetchData = async () => {
       try {
+        const [detailData, extraItemsData] = await Promise.all([
+          getDetailBooking(id),
+          getExtraitems(),
+        ]);
+
         const data = await getDetailBooking(id);
         console.log("data before save booking", data);
         const bookingDetail = data.Data;
@@ -63,6 +73,7 @@ const ModelCheckout = ({
           CreateAt: bookingDetail.CreateAt,
         });
         setBookingItems(bookingDetail.BookingItems);
+        setExtraItems(extraItemsData.Data);
         console.log("Booking Items:", bookingDetail.BookingItems);
 
         const totalServicePrice = bookingDetail.BookingItems.reduce(
@@ -216,25 +227,35 @@ const ModelCheckout = ({
               </thead>
               <tbody>
                 {bookingItems.length > 0 ? (
-                  bookingItems.map((item: any, index: number) => (
-                    <tr
-                      key={index}
-                      className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300"
-                    >
-                      <th
-                        scope="row"
-                        className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
+                  bookingItems.map((bookingItem: any, i) => {
+                    const item = extraItems.find(
+                      (item: any) => item.id === bookingItem.ItemId
+                    );
+
+                    if (!item) {
+                      return null;
+                    }
+
+                    return (
+                      <tr
+                        key={i}
+                        className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300"
                       >
-                        {index + 1}
-                      </th>
-                      <td className="px-6 py-4">{item.Item.Name}</td>
-                      <td className="px-6 py-4">{item.Item.Price}</td>
-                      <td className="px-6 py-4">{item.Quantity}</td>
-                      <td className="px-6 py-4 text-right">
-                        {item.TotalPrice}
-                      </td>
-                    </tr>
-                  ))
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
+                        >
+                          {i + 1}
+                        </th>
+                        <td className="px-6 py-4">{(item as any)?.name}</td>
+                        <td className="px-6 py-4">{(item as any)?.price}</td>
+                        <td className="px-6 py-4">{bookingItem.Quantity}</td>
+                        <td className="px-6 py-4 text-right">
+                          {bookingItem.TotalPrice}
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td
