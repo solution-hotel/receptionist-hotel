@@ -1,12 +1,20 @@
 export interface Booking {
     id: number;
+    Id: number;
     lastName: string;
+    LastName: string;
     firstName: string;
+    FirstName: string;
     phoneNumber: number;
+    PhoneNumber: number;
     typeRoomName: string;
+    TypeRoomName: string;
     roomNumber: string;
+    RoomNumber: string;
     checkinDate: Date;
+    CheckinDate: Date;
     checkoutDate: Date;
+    CheckoutDate: Date;
 }
 
 export interface BookingFormData {
@@ -59,4 +67,15 @@ export interface DataUpdateBooking {
     price: number,
     RoomNumber: string,
     Status: number,
+    Id: number,
+}
+
+export interface FormDataValidate {
+    lastName?: string;
+    firstName?: string;
+    roomType?: string;
+    phoneNumber?: string;
+    email?: string;
+    checkinDate?: string;
+    checkoutDate?: string;
 }

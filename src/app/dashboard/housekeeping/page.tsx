@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import PopupCleaning from "@/components/PopupCleaning";
+import PopupCleaning from "../../../components/PopupCleaning";
 import PaginationD from "./../../../components/PaginationD";
-import { getListRoom } from "@/utils/api/housekeeping";
-import { Room } from "@/utils/types/housekeeping";
+import { getListRoom } from "../../../utils/api/housekeeping";
+import { Room } from "../../../utils/types/housekeeping";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const HouseKeeping = ({

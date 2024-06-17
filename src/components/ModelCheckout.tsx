@@ -1,19 +1,129 @@
-import React from "react";
-import { MdWindow, MdOutlineAddBox, MdBedroomParent } from "react-icons/md";
+import React, { useState, useEffect } from "react";
+import { MdWindow, MdBedroomParent } from "react-icons/md";
 import { FaWindowClose, FaConciergeBell } from "react-icons/fa";
+import { format } from "date-fns";
+import {
+  getDetailBooking,
+  paymentBooking,
+  getExtraitems,
+} from "@/utils/api/receptionist";
+import Swal from "sweetalert2";
 
 const ModelCheckout = ({
   handelShowModel,
+  id,
 }: {
-  handelShowModel: (show: boolean) => void;
+  handelShowModel: (show: boolean, id: number) => void;
+  id: number;
 }) => {
+  const [bookingData, setBookingData] = useState({
+    checkinDate: "",
+    checkoutDate: "",
+    roomType: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    maximumCapacity: "",
+    numberOfAdults: "",
+    numberOfChildren: "",
+    price: 0,
+    RoomNumber: "",
+    Status: 0,
+    CreateAt: "",
+  });
+  const [bookingItems, setBookingItems] = useState([]);
+  const [totalServicePrice, setTotalServicePrice] = useState(0);
+  const [extraItems, setExtraItems] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        const [detailData, extraItemsData] = await Promise.all([
+          getDetailBooking(id),
+          getExtraitems(),
+        ]);
+
+        const data = await getDetailBooking(id);
+        console.log("data before save booking", data);
+        const bookingDetail = data.Data;
+
+        setBookingData({
+          checkinDate: format(
+            new Date(bookingDetail.CheckinDate),
+            "yyyy-MM-dd"
+          ),
+          checkoutDate: format(
+            new Date(bookingDetail.CheckoutDate),
+            "yyyy-MM-dd"
+          ),
+          roomType: bookingDetail.RoomType.Name,
+          firstName: bookingDetail.Guest.FirstName,
+          lastName: bookingDetail.Guest.LastName,
+          email: bookingDetail.Guest.Email,
+          phoneNumber: bookingDetail.Guest.PhoneNumber,
+          maximumCapacity: bookingDetail.RoomType.MaximumCapacity,
+          numberOfAdults: bookingDetail.RoomType.NumberOfAdults,
+          numberOfChildren: bookingDetail.RoomType.NumberOfChildren,
+          price: bookingDetail.RoomType.Price,
+          RoomNumber: bookingDetail.Room ? bookingDetail.Room.RoomNumber : "",
+          Status: bookingDetail.Status,
+          CreateAt: bookingDetail.CreateAt,
+        });
+        setBookingItems(bookingDetail.BookingItems);
+        setExtraItems(extraItemsData.Data);
+        console.log("Booking Items:", bookingDetail.BookingItems);
+
+        const totalServicePrice = bookingDetail.BookingItems.reduce(
+          (total: number, item: { TotalPrice: number }) =>
+            total + item.TotalPrice,
+          0
+        );
+        setTotalServicePrice(totalServicePrice);
+      } catch (error) {
+        console.error("Error fetching booking detail:", error);
+      }
+    };
+
+    if (isMounted) {
+      fetchData();
+      isMounted = false; // Fetch data only once when component mounts
+    }
+
+    return () => {
+      isMounted = false; // Set isMounted to false on component unmount
+    };
+  }, [id]); // Only re-run the effect if `id` changes
+
+  // You may need to add useEffect dependencies and return cleanup
+
+  const handleSave = async () => {
+    try {
+      console.log(bookingData);
+      await paymentBooking(id);
+      Swal.fire({
+        title: "Thành công!",
+        text: "Thanh toán phòng thành công.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      handelShowModel(false, 0);
+    } catch (error) {
+      console.error("Lỗi thanh toán:", error);
+    }
+  };
+
+  const totalPrice = bookingData.price + totalServicePrice;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center my-4 overflow-y-auto">
-      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 px-4 top-1 bottom-10 bg-white border-black border-1">
+    <div className="fixed inset-0 flex items-center justify-center overflow-y-auto">
+      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 px-4 top-1 bottom-10 bg-white border-black border-1 rounded-md">
         <div className="flex justify-end mr-4 cursor-pointer">
-          <FaWindowClose size={25} onClick={() => handelShowModel(false)} />
+          <FaWindowClose size={25} onClick={() => handelShowModel(false, 0)} />
         </div>
-        <div className="text-center font-bold">THANH TOÁN</div>
+        <div className="text-center font-bold text-xl">Thanh toán</div>
         <div>
           <div className="flex flex-row items-center gap-1 ml-8">
             <div>
@@ -21,22 +131,24 @@ const ModelCheckout = ({
             </div>
             <div>Thông tin booking</div>
           </div>
-          <div className="ml-8 mt-8">
+          <div className="ml-8 mt-2">
             <div className="flex flex-row items-center">
               <span>Họ và tên</span>
-              <span className="ml-24">Nguyen Huu Thang</span>
+              <span className="ml-24">
+                {bookingData.firstName} {bookingData.lastName}
+              </span>
             </div>
             <div className="flex flex-row items-center">
               <span>Số điện thoại</span>
-              <span className="ml-[72px]">0932 092 092</span>
+              <span className="ml-[72px]">{bookingData.phoneNumber}</span>
             </div>
             <div className="flex flex-row items-center">
               <span>Email</span>
-              <span className="ml-32">thangnguyen@gmail.com</span>
+              <span className="ml-32">{bookingData.email}</span>
             </div>
             <div className="flex flex-row items-center">
               <span>Thời gian đặt phòng</span>
-              <span className="ml-[22px]">9:42 PM 13/04/2024</span>
+              <span className="ml-[22px]">{bookingData.CreateAt}</span>
             </div>
           </div>
         </div>
@@ -74,12 +186,12 @@ const ModelCheckout = ({
                     scope="row"
                     className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
                   >
-                    Phòng 209
+                    {bookingData.RoomNumber}
                   </th>
-                  <td className="px-6 py-4">17/04/2024</td>
-                  <td className="px-6 py-4">20/04/2024</td>
+                  <td className="px-6 py-4">{bookingData.checkinDate}</td>
+                  <td className="px-6 py-4">{bookingData.checkoutDate}</td>
                   <td className="px-6 py-4">1</td>
-                  <td className="px-6 py-4">240,00</td>
+                  <td className="px-6 py-4">{bookingData.price.toFixed(2)}</td>
                 </tr>
               </tbody>
             </table>
@@ -114,66 +226,89 @@ const ModelCheckout = ({
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
-                  >
-                    1
-                  </th>
-                  <td className="px-6 py-4">Nước ngọt</td>
-                  <td className="px-6 py-4">12,000</td>
-                  <td className="px-6 py-4">2</td>
-                  <td className="px-6 py-4">24,00</td>
-                </tr>
-                <tr className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300">
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black"
-                  >
-                    2
-                  </th>
-                  <td className="px-6 py-4">Bánh tráng</td>
-                  <td className="px-6 py-4">25,000</td>
-                  <td className="px-6 py-4">2</td>
-                  <td className="px-6 py-4">50,000</td>
-                </tr>
+                {bookingItems.length > 0 ? (
+                  bookingItems.map((bookingItem: any, i) => {
+                    const item = extraItems.find(
+                      (item: any) => item.id === bookingItem.ItemId
+                    );
+
+                    if (!item) {
+                      return null;
+                    }
+
+                    return (
+                      <tr
+                        key={i}
+                        className="bg-white border-b hover:bg-gray-50 dark:hover:bg-gray-300"
+                      >
+                        <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-black whitespace-nowrap dark:text-black"
+                        >
+                          {i + 1}
+                        </th>
+                        <td className="px-6 py-4">{(item as any)?.name}</td>
+                        <td className="px-6 py-4">{(item as any)?.price}</td>
+                        <td className="px-6 py-4">{bookingItem.Quantity}</td>
+                        <td className="px-6 py-4 text-right">
+                          {bookingItem.TotalPrice}
+                        </td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-4 text-center font-medium text-gray-500 dark:text-gray-400"
+                    >
+                      Khách hàng không sử dụng dịch vụ gì
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </div>
         <div className="mx-8">
           <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#D9D9D9] bg-opacity-20">
-            <div className="flex justify-end">
-              <span className="mr-[60px] font-bold">Tổng tiền phòng</span>
-              <span>500,000 VNĐ</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="mr-[55px] font-bold">Tổng tiền dịch vụ</span>
-              <span>100,000 VNĐ</span>
-            </div>
-            <div className="flex justify-end">
-              <span className="mr-[101px] font-bold">Tổng tiền</span>
-              <span>1,500,000 VNĐ</span>
-            </div>
+            {totalServicePrice > 0 && (
+              <div className="flex justify-end">
+                <span className="mr-[55px] font-bold">Tổng tiền dịch vụ</span>
+                <span>{totalServicePrice.toFixed(2)} VNĐ</span>
+              </div>
+            )}
+            {bookingData.price > 0 && (
+              <div className="flex justify-end">
+                <span className="mr-[60px] font-bold">Tổng tiền phòng</span>
+                <span>{bookingData.price.toFixed(2)} VNĐ</span>
+              </div>
+            )}
+            {totalPrice > 0 && (
+              <div className="flex justify-end">
+                <span className="mr-[101px] font-bold">Tổng tiền</span>
+                <span>{totalPrice.toFixed(2)} VNĐ</span>
+              </div>
+            )}
           </div>
         </div>
         <div className="flex justify-end gap-4 my-4 mr-8">
           <div>
             <button
-              onClick={() => handelShowModel(false)}
-              type="button"
-              className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600"
-            >
-              Hủy
-            </button>
-          </div>
-          <div>
-            <button
+              onClick={() => handleSave()}
               type="button"
               className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
             >
               Thanh toán
+            </button>
+          </div>
+          <div>
+            <button
+              onClick={() => handelShowModel(false, 0)}
+              type="button"
+              className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600"
+            >
+              Hủy
             </button>
           </div>
         </div>
