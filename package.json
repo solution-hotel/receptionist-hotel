@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@microsoft/signalr": "^8.0.0",
     "@nextui-org/pagination": "^2.0.30",
     "@nextui-org/react": "^2.3.6",
     "@nextui-org/system": "^2.1.2",

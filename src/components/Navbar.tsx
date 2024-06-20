@@ -8,6 +8,7 @@ import { RootState } from "../store";
 import { UserProfile } from "../utils/types/user";
 import { useRouter } from "next/navigation";
 import { logoutUser } from "../store/reducers/userloginReducer";
+import Chat from "./Chat";
 
 const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -19,13 +20,11 @@ const Navbar = () => {
   const router = useRouter();
   const dataUser = useSelector((state: RootState) => state.userlogin.login);
   const token = dataUser?.token ?? "";
-  const [userProfile, setUserProfile] = useState<UserProfile | null>();
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const getData = useCallback(async () => {
     try {
-      console.log("Fetching user profile...");
       const user = await getProfile(token);
       setUserProfile(user.Data);
-      console.log("Data user login:", user.Data);
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
@@ -68,6 +67,11 @@ const Navbar = () => {
   return (
     <div className="w-full flex justify-between px-4 items-center gap-2 border-b border-black bg-[#F9F8F8] relative px-2 py-2">
       <div className="font-bold text-[#2457C5]">BLUE HOUSE</div>
+      <div>
+        {/* {userProfile && (
+          <Chat userId={`${userProfile.LastName} ${userProfile.FirstName}`} />
+        )} */}
+      </div>
       <div className="flex flex-row items-center">
         <div className="mr-2">
           <BsPersonCircle size={`${1.5}rem`} />

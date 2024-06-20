@@ -65,9 +65,10 @@ export interface DataUpdateBooking {
     numberOfAdults: string,
     numberOfChildren: string,
     price: number,
-    RoomNumber: string,
+    RoomNumber: string;
     Status: number,
     Id: number,
+    RoomId: number
 }
 
 export interface FormDataValidate {
@@ -78,4 +79,8 @@ export interface FormDataValidate {
     email?: string;
     checkinDate?: string;
     checkoutDate?: string;
+}
+
+export interface ChatType {
+   userId: string | undefined;
 }
