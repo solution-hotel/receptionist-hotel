@@ -89,15 +89,13 @@ const ModelCheckout = ({
 
     if (isMounted) {
       fetchData();
-      isMounted = false; // Fetch data only once when component mounts
+      isMounted = false;
     }
 
     return () => {
-      isMounted = false; // Set isMounted to false on component unmount
+      isMounted = false;
     };
-  }, [id]); // Only re-run the effect if `id` changes
-
-  // You may need to add useEffect dependencies and return cleanup
+  }, [id]);
 
   const handleSave = async () => {
     try {
@@ -135,7 +133,7 @@ const ModelCheckout = ({
             <div className="flex flex-row items-center">
               <span>Họ và tên</span>
               <span className="ml-24">
-                {bookingData.firstName} {bookingData.lastName}
+                {bookingData.lastName} {bookingData.firstName}
               </span>
             </div>
             <div className="flex flex-row items-center">
@@ -262,7 +260,7 @@ const ModelCheckout = ({
                       colSpan={5}
                       className="px-6 py-4 text-center font-medium text-gray-500 dark:text-gray-400"
                     >
-                      Khách hàng không sử dụng dịch vụ gì
+                      Khách hàng không sử dụng dịch vụ
                     </td>
                   </tr>
                 )}

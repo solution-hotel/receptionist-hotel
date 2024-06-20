@@ -25,6 +25,8 @@ export default function Receptionist({
   const [noResults, setNoResults] = useState(false);
   const [loading, setLoading] = useState(false);
   const [typeDate, setTypeDate] = useState(0);
+  const [numberCheckin, setNumberCheckin] = useState(0);
+  const [numberCheckout, setNumberCheckout] = useState(0);
   const handleShowModelAdd = (show: boolean) => {
     setShowModalAdd(show);
   };
@@ -73,8 +75,32 @@ export default function Receptionist({
           page,
           6
         );
+        const dataCheckin = await listBooking(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          1,
+          1000
+        );
+        const dataCheckout = await listBooking(
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          2,
+          1,
+          1000
+        );
         if (data.Data && data.Data.length > 0) {
           setDataListBooking(data.Data);
+          setNumberCheckin(dataCheckin.Data.length);
+          setNumberCheckout(dataCheckout.Data.length);
           setNoResults(false);
         } else {
           setDataListBooking([]);
@@ -92,7 +118,6 @@ export default function Receptionist({
 
     fetchData(search);
   }, [showModalDetail, dataUpdated, typeDate, page, search]);
-
   return (
     <div className="w-full h-full">
       {loading && (
@@ -100,20 +125,20 @@ export default function Receptionist({
           <ClipLoader color="#36d7b7" />
         </div>
       )}
-      <div className="flex justify-around gap-4 pt-8">
+      <div className="flex justify-start gap-4 pt-8">
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="text-md">Đặt phòng chờ nhận trong ngày</div>
-            <div className="font-bold text-3xl">0</div>
+            <div className="font-bold text-3xl">{numberCheckin}</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="text-md">Đặt phòng chờ trả trong ngày</div>
-            <div className="font-bold text-3xl">0</div>
+            <div className="font-bold text-3xl">{numberCheckout}</div>
           </div>
         </div>
-        <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
+        {/* <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="text-md">Phòng đang sử dụng</div>
             <div className="font-bold text-3xl">0</div>
@@ -124,7 +149,7 @@ export default function Receptionist({
             <div className="text-md">Phòng trống</div>
             <div className="font-bold text-3xl">0</div>
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="relative overflow-x-auto shadow-md px-4 bg-white my-4">
         <div className="flex gap-6 content-center items-center justify-around border-b-4 relative">

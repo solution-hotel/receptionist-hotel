@@ -17,7 +17,12 @@ import { format } from "date-fns";
 import ClipLoader from "react-spinners/ClipLoader";
 import Swal from "sweetalert2";
 import { DataUpdateBooking } from "@/utils/types/receptionist";
-import { getExtraitems } from "./../utils/api/receptionist";
+import {
+  getExtraitems,
+  getAllRoomType,
+  getListRoom,
+} from "./../utils/api/receptionist";
+import PopupCheckingRoom from "./PopupCheckingRoom";
 
 const ModelDetail = ({
   handelShowModel,
@@ -43,6 +48,7 @@ const ModelDetail = ({
     RoomNumber: "",
     Status: 0,
     Id: 0,
+    RoomId: 0,
   });
   const [bookingItems, setBookingItems] = useState([]);
   const [bookingID, setBookingID] = useState<number>(0);
@@ -51,16 +57,28 @@ const ModelDetail = ({
   const [showModalCheckout, setShowModalCheckout] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPopUpCleaning, setShowPopUpChecking] = useState(false);
+  const [roomID, setRoomID] = useState(null);
+  const [statusBooking, setStatusBooking] = useState<number>(0);
+  const [roomData, setRoomData] = useState([]);
+  const [listRoom, setListRoom] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [detailData, extraItemsData] = await Promise.all([
-          getDetailBooking(id),
-          getExtraitems(),
-        ]);
-
-        console.log("Data before save booking", detailData);
+        const [detailData, extraItemsData, roomDataResponse, listRoomData] =
+          await Promise.all([
+            getDetailBooking(id),
+            getExtraitems(),
+            getAllRoomType(),
+            getListRoom(),
+          ]);
+        setListRoom(listRoomData.Data);
+        setRoomData(roomDataResponse.Data);
+        if (detailData.Data.Room !== null) {
+          setRoomID(detailData.Data.Room.Id);
+        }
+        setStatusBooking(detailData.Data.Status);
         setBookingData({
           checkinDate: format(
             new Date(detailData.Data.CheckinDate),
@@ -79,16 +97,14 @@ const ModelDetail = ({
           numberOfAdults: detailData.Data.RoomType.NumberOfAdults,
           numberOfChildren: detailData.Data.RoomType.NumberOfChildren,
           price: detailData.Data.RoomType.Price,
-          RoomNumber: detailData.Data.Room
-            ? detailData.Data.Room.RoomNumber || ""
-            : "",
+          RoomNumber: detailData?.Data?.Room?.RoomNumber || null,
           Status: detailData.Data.Status,
           Id: detailData.Data.Id,
+          RoomId: detailData?.Data?.Room?.Id || null,
         });
         setBookingItems(detailData.Data.BookingItems);
         setExtraItems(extraItemsData.Data);
 
-        console.log("Booking Items:", detailData.Data.BookingItems);
         const totalServicePrice = detailData.Data.BookingItems.reduce(
           (total: number, item: { TotalPrice: number }) =>
             total + item.TotalPrice,
@@ -122,9 +138,48 @@ const ModelDetail = ({
         return Number(150);
       case "8":
         return Number(200);
+      case "9":
+        return Number(500);
+      case "10":
+        return Number(1000);
+      case "11":
+        return Number(800);
+      case "12":
+        return Number(180);
+      case "13":
+        return Number(250);
+      case "14":
+        return Number(100);
+      case "15":
+        return Number(150);
+      case "16":
+        return Number(250);
+      case "17":
+        return Number(200);
+      case "18":
+        return Number(300);
       default:
         return Number(0);
     }
+  };
+
+  const roomTypeMapping = {
+    3: "Standard",
+    4: "Single",
+    5: "Double",
+    6: "Twin",
+    7: "Triple",
+    8: "Family",
+    9: "Presidential",
+    10: "Penthouse",
+    11: "Bungalow",
+    12: "Studio",
+    13: "Loft",
+    14: "Standard",
+    15: "Deluxe",
+    16: "Suite",
+    17: "Family",
+    18: "Executive",
   };
 
   // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -170,13 +225,69 @@ const ModelDetail = ({
       };
 
       if (name === "roomType") {
-        const newPrice = getRoomPrice(value);
-        return { ...updatedData, price: newPrice } as DataUpdateBooking;
+        const selectedRoom = roomData.find(
+          (room: any) => room.id === parseInt(value)
+        );
+        if (selectedRoom) {
+          const newPrice = getRoomPrice(value);
+          return {
+            ...updatedData,
+            price: newPrice,
+            maximumCapacity: selectedRoom.maximumCapacity,
+            numberOfAdults: selectedRoom.numberOfAdults,
+            numberOfChildren: selectedRoom.numberOfChildren,
+          } as DataUpdateBooking;
+        }
       }
 
       return updatedData as DataUpdateBooking;
     });
   };
+
+  const filteredRooms = listRoom.filter((room: any) => {
+    const selectedRoomTypeId = parseInt(bookingData.roomType);
+
+    switch (selectedRoomTypeId) {
+      case 3:
+      case 14:
+        return room.TypeRoomName === "Standard";
+      case 4:
+        return room.TypeRoomName === "Single";
+      case 5:
+        return room.TypeRoomName === "Double";
+      case 6:
+        return room.TypeRoomName === "Twin";
+      case 7:
+        return room.TypeRoomName === "Triple";
+      case 8:
+      case 17:
+        return room.TypeRoomName === "Family";
+      case 9:
+        return room.TypeRoomName === "Presidential";
+      case 10:
+        return room.TypeRoomName === "Penthouse";
+      case 11:
+        return room.TypeRoomName === "Bungalow";
+      case 12:
+        return room.TypeRoomName === "Studio";
+      case 13:
+        return room.TypeRoomName === "Loft";
+      case 15:
+        return room.TypeRoomName === "Deluxe";
+      case 16:
+        return room.TypeRoomName === "Suite";
+      case 18:
+        return room.TypeRoomName === "Executive";
+      default:
+        return true;
+    }
+  });
+
+  const uniqueRooms = Array.from(
+    new Set(filteredRooms.map((room: any) => room.RoomNumber))
+  ).map((roomNumber) => {
+    return filteredRooms.find((room: any) => room.RoomNumber === roomNumber);
+  });
 
   const handleSave = async () => {
     setLoading(true);
@@ -242,9 +353,15 @@ const ModelDetail = ({
     setBookingID(id);
     setShowModalCheckout(show);
   };
+
+  const handleShowPopUpChecking = (show: boolean, id: null) => {
+    setRoomID(id);
+    setShowPopUpChecking(show);
+  };
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center my-4 overflow-y-auto z-100">
-      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 px-4 top-1 bottom-10 bg-white border-black border-1 z-100 rounded-md">
+    <div className="fixed inset-0 flex items-center justify-center overflow-y-auto">
+      <div className="w-fit absolute h-fit backdrop-filter backdrop-brightness-75 backdrop-blur-md py-8 top-1 bottom-10 bg-white border-black border-1 z-100 rounded-md">
         <div className="flex justify-end mr-4 cursor-pointer">
           <FaWindowClose size={25} onClick={() => handelShowModel(false, 0)} />
         </div>
@@ -258,7 +375,7 @@ const ModelDetail = ({
             </div>
             <div className="font-semibold">Thông tin booking</div>
           </div>
-          <div className="mx-4 my-4 px-4 py-4">
+          <div className="mx-4 my-2 px-4 py-4">
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <div className="grid grid-cols-2 gap-2 mb-4">
@@ -269,7 +386,7 @@ const ModelDetail = ({
                       type="text"
                       name="lastName"
                       id="lastName"
-                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                      className="border-1 w-28 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                       onChange={handleChange}
                     />
                   </div>
@@ -280,7 +397,7 @@ const ModelDetail = ({
                       type="text"
                       name="firstName"
                       id="firstName"
-                      className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                      className="border-1 w-28 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                       onChange={handleChange}
                     />
                   </div>
@@ -305,12 +422,11 @@ const ModelDetail = ({
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   >
                     <option value="">Chọn loại phòng</option>
-                    <option value="3">Standard</option>
-                    <option value="4">Single</option>
-                    <option value="5">Double</option>
-                    <option value="6">Twin</option>
-                    <option value="7">Triple</option>
-                    <option value="8">Family</option>
+                    {roomData.map((room: any) => (
+                      <option key={room.id} value={room.id}>
+                        {room.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -391,15 +507,38 @@ const ModelDetail = ({
             </div>
             <div className="grid grid-cols-2 gap-2 mb-4">
               <div className="flex flex-col">
-                <label htmlFor="numberRoom">Số phòng</label>
-                <input
-                  value={bookingData.RoomNumber || "102"}
-                  type="text"
+                <label htmlFor="numberRoom">Chọn số phòng</label>
+                <select
                   name="RoomNumber"
-                  id="numberRoom"
-                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                  value={bookingData.RoomId}
                   onChange={handleChange}
-                />
+                  className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                >
+                  <option value="" disabled>
+                    -- Select Room --
+                  </option>
+
+                  {uniqueRooms.length > 0 ? (
+                    uniqueRooms.map((room: any) => (
+                      <option key={room.Id} value={room.Id}>
+                        {room.RoomNumber}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="" disabled>
+                      Không có phòng có sẵn
+                    </option>
+                  )}
+
+                  {bookingData.RoomNumber &&
+                    !uniqueRooms.some(
+                      (room: any) => room.Id === bookingData.RoomId
+                    ) && (
+                      <option value={bookingData.RoomId}>
+                        {bookingData.RoomNumber}
+                      </option>
+                    )}
+                </select>
               </div>
               <div className="flex flex-col">
                 <label htmlFor="status">Trạng thái</label>
@@ -409,17 +548,17 @@ const ModelDetail = ({
                   id="status"
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
-                  disabled={bookingData.Status ? bookingData.Status == 4 : true}
+                  disabled={bookingData.Status ? bookingData.Status == 5 : true}
                 >
-                  <option value="0">Chưa xác nhận</option>
-                  <option value="1">Đã xác nhận</option>
-                  <option value="2">Đã check-in</option>
-                  <option value="3">Đã check-out</option>
-                  <option value="4">Đã hủy</option>
+                  <option value="1">Chưa xác nhận</option>
+                  <option value="2">Đã xác nhận</option>
+                  <option value="3">Đã check-in</option>
+                  <option value="4">Đã check-out</option>
+                  <option value="5">Đã hủy</option>
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 mb-4">
+            <div className="grid grid-cols-2 gap-2">
               <div className="flex flex-col">
                 <label htmlFor="checkinDate">Ngày nhận phòng</label>
                 <input
@@ -556,7 +695,7 @@ const ModelDetail = ({
         </div>
         <div className="mx-8">
           <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#E8E8E8              ] bg-opacity-20">
-            {bookingData.price && (
+            {bookingData.price > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[100px] font-bold">Tiền phòng</span>
                 <span className="font-bold">{`${bookingData.price},000 VNĐ`}</span>
@@ -568,7 +707,7 @@ const ModelDetail = ({
                 <span className="font-bold">{`${totalServicePrice},000 VNĐ`}</span>
               </div>
             )}
-            {totalPrice && (
+            {totalPrice > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[100px] font-bold">Tổng tiền</span>
                 <span className="font-bold">{`${totalPrice},000 VNĐ`}</span>
@@ -579,43 +718,68 @@ const ModelDetail = ({
         <div className="flex justify-center gap-4 my-4">
           <div>
             <button
+              disabled={bookingData.Status ? bookingData.Status == 5 : true}
               type="button"
-              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              onClick={handleSave}
+              className={`focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 ${
+                bookingData.Status == 5
+                  ? "bg-gray-400 text-gray-600"
+                  : "text-white bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+              }`}
             >
               Lưu
             </button>
           </div>
           <div>
             <button
+              disabled={bookingData.Status ? bookingData.Status == 5 : true}
               onClick={() => handleShowModelCheckout(true, bookingData.Id)}
               type="button"
-              className="focus:outline-none text-white bg-[#FBC252] hover:bg-[#FFB100] font-medium rounded-lg text-sm px-5 py-2.5"
+              className={`focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 ${
+                bookingData.Status == 5
+                  ? "bg-gray-400 text-gray-600"
+                  : "text-white bg-[#FBC252] hover:bg-[#FFB100]"
+              }`}
             >
               Check-out
             </button>
           </div>
           <div>
             <button
+              disabled={bookingData.Status ? bookingData.Status == 5 : true}
               onClick={handleSendMail}
               type="button"
-              className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              className={`font-medium rounded-lg text-sm px-5 py-2.5 ${
+                bookingData.Status == 5
+                  ? "bg-gray-400 text-gray-600"
+                  : "text-white bg-blue-700 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              }`}
             >
               Gửi email
             </button>
           </div>
           <div>
             <button
+              disabled={bookingData.Status ? bookingData.Status == 5 : true}
+              onClick={() => handleShowPopUpChecking(true, roomID)}
               type="button"
-              className="text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-[#C38154] dark:text-white dark:hover:bg-[#884A39]"
+              className={`font-medium rounded-lg text-sm px-5 py-2.5 ${
+                bookingData.Status == 5
+                  ? "bg-gray-400 text-gray-600"
+                  : "text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 dark:bg-[#C38154] dark:text-white dark:hover:bg-[#884A39]"
+              }`}
             >
               Y/C kiểm phòng
             </button>
           </div>
           <div>
             <button
+              disabled={bookingData.Status ? bookingData.Status === 5 : true}
               type="button"
-              className="text-white bg-[#FF0000] border border-gray-300 hover:bg-[#EE4E4E] font-medium rounded-lg text-sm px-5 py-2.5"
+              className={`font-medium rounded-lg text-sm px-5 py-2.5 ${
+                bookingData.Status == 5
+                  ? "bg-gray-400 text-gray-600"
+                  : "text-white bg-[#FF0000] border border-gray-300 hover:bg-[#EE4E4E]"
+              }`}
               onClick={handleCancel}
             >
               Hủy Booking
@@ -627,6 +791,13 @@ const ModelDetail = ({
         <ModelCheckout
           handelShowModel={handleShowModelCheckout}
           id={bookingID}
+        />
+      )}
+      {showPopUpCleaning && (
+        <PopupCheckingRoom
+          handelShowPopUp={handleShowPopUpChecking}
+          id={roomID}
+          status={statusBooking}
         />
       )}
     </div>

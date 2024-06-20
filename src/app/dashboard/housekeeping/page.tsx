@@ -16,6 +16,8 @@ const HouseKeeping = ({
   const [noResults, setNoResults] = useState(false);
   const [roomID, setRoomID] = useState<number>(0);
   const [loading, setLoading] = useState(false);
+  const [numberDirty, setNumberDirty] = useState(0);
+  const [numberClean, setNumberClean] = useState(0);
   const handleShowPopUpCleaning = (show: boolean, id: number) => {
     setRoomID(id);
     setShowPopUpCleaning(show);
@@ -29,7 +31,22 @@ const HouseKeeping = ({
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getListRoom(parseInt(page));
+        const data = await getListRoom(parseInt(page), 5);
+        const room = await getListRoom(1, 1000);
+
+        let cleanCount = 0;
+        let dirtyCount = 0;
+
+        room.Data.forEach((room: any) => {
+          if (room.Status >= 2 && room.Status <= 5) {
+            dirtyCount++;
+          } else if (room.Status === 1 || room.Status === 6) {
+            cleanCount++;
+          }
+        });
+
+        setNumberClean(cleanCount);
+        setNumberDirty(dirtyCount);
 
         console.log("data response", data);
 
@@ -62,13 +79,13 @@ const HouseKeeping = ({
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="text-md">Số phòng bẩn</div>
-            <div className="font-bold text-3xl">0</div>
+            <div className="font-bold text-3xl">{numberDirty}</div>
           </div>
         </div>
         <div className=" bg-slate-50 bg-opacity-90 w-72 h-28 rounded-lg backdrop-blur-lg shadow-lg">
           <div className="mt-4 ml-4">
             <div className="text-md">Số phòng sạch</div>
-            <div className="font-bold text-3xl">0</div>
+            <div className="font-bold text-3xl">{numberClean}</div>
           </div>
         </div>
       </div>

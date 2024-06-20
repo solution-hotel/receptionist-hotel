@@ -1,32 +1,30 @@
 import { DataBooking, DataAddBooking, DataUpdateBooking } from "@/utils/types/receptionist"
-import { log } from "console";
 const baseurl = 'https://api-pnv.bluejaypos.vn';
 // const baseurl = 'http://192.168.10.70:83';
 
-export const loginApi = async (email: string, password: string) => {
-  const url = `${baseurl}/auth/login`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to login: ${response.statusText}`);
-  }
-  const data = await response.json();
-  return data;
+export const loginApi = async (email:string, password:string) => {
+    const url = `${baseurl}/auth/login`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
+  
+    if (!response.ok) {
+      throw new Error(`Failed to login: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
 };
 
 export const logoutApi = async (token: string) => {
   const url = `${baseurl}/auth/logout`;
-  console.log("data token", token)
-  console.log("type of token", typeof token)
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -66,10 +64,9 @@ export const listBooking = async (fromDay: Date | null, toDay: Date | null, find
       'Content-Type': 'application/json',
     }
   })
-  const data = await response.json();
-  console.log("Data response of list booking", data);
 
-  return data;
+    const data = await response.json();
+    return data;
 }
 
 export const getDetailBooking = async (id: number) => {
@@ -85,6 +82,9 @@ export const getDetailBooking = async (id: number) => {
       throw new Error('Failed to fetch booking detail');
     }
     const data = await response.json();
+    console.log('====================================');
+    console.log("data response of detail booking",data);
+    console.log('====================================');
     return data;
   } catch (error) {
     console.error('Error fetching booking detail:', error);
@@ -104,7 +104,6 @@ export const addBooking = async (formData: DataAddBooking) => {
     Email: formData.email,
     PhoneNumber: formData.phoneNumber,
   };
-  console.log("data ưadd", bookingData)
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -119,7 +118,6 @@ export const addBooking = async (formData: DataAddBooking) => {
     }
 
     const result = await response.json();
-    console.log("Booking created successfully:", result);
     return result;
   } catch (error) {
     console.error("Error creating booking:", error);
@@ -129,18 +127,18 @@ export const addBooking = async (formData: DataAddBooking) => {
 
 export const updateBooking = async (id: number, formData: DataUpdateBooking) => {
   const url = `${baseurl}/booking/update?id=${id}`
+
   const bookingData = {
     CheckinDate: formData.checkinDate,
     CheckoutDate: formData.checkoutDate,
-    RoomTypeId: formData.roomType,
+    RoomTypeId: parseInt(formData.roomType),
     FirstName: formData.firstName,
     LastName: formData.lastName,
     Email: formData.email,
+    RoomId: parseInt(formData.RoomNumber),
     PhoneNumber: formData.phoneNumber,
     Status: formData.Status
-  };
-  console.log("ID", id);
-  console.log("This is the data of updated", bookingData);
+  }
   try {
     const response = await fetch(url, {
       method: 'PATCH',
@@ -493,3 +491,48 @@ export const getExtraitems = async () => {
   const data = await response.json();
   return data
 }
+
+
+export const assignHousekeepingToRoomToCheck = async (roomId: number, employeeId: number) => {
+  const url = ` ${baseurl}/housekeeping/assigncheck`;
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type" : "application/json",
+    },
+    method:"POST",
+    body: JSON.stringify({ RoomId: roomId, EmployeeId: employeeId})
+  })
+
+  const data = await response.json();
+  console.log("data response of assign HK to check the room", data)
+  return data;
+}
+
+
+export const getAllRoomType = async () => {
+  const url = `${baseurl}/roomtype/getall`;
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method:"GET"
+  })
+
+  const data = await response.json();
+  return data
+}
+
+
+export const getListRoom = async () => {
+  const url = `${baseurl}/room/list?housekeeping=&roomType=&floor=&status=&orderBy=&page=${1}&limit=${1000}`;
+
+  const response = await fetch(url, {
+    method:'GET',
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+const data = await response.json();
+return data;
+};
