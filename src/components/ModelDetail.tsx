@@ -571,7 +571,7 @@ const ModelDetail = ({
                   name="checkinDate"
                   id="checkinDate"
                   min="2024-06-01"
-                  max="2024-12-31"
+                  max="2999-12-31"
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
@@ -588,7 +588,7 @@ const ModelDetail = ({
                   name="checkoutDate"
                   id="checkoutDate"
                   min="2024-06-01"
-                  max="2024-12-31"
+                  max="2999-12-31"
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />

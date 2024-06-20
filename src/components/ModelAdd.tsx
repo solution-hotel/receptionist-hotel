@@ -66,25 +66,25 @@ const ModelAdd = ({
       case "8":
         return Number(200);
       case "9":
-          return Number(500);
+        return Number(500);
       case "10":
-          return Number(1000);
+        return Number(1000);
       case "11":
-          return Number(800);
+        return Number(800);
       case "12":
-          return Number(180);
+        return Number(180);
       case "13":
-          return Number(250);
+        return Number(250);
       case "14":
-          return Number(100);
+        return Number(100);
       case "15":
-          return Number(150);
+        return Number(150);
       case "16":
-          return Number(250);
+        return Number(250);
       case "17":
-          return Number(200);
+        return Number(200);
       case "18":
-          return Number(300);
+        return Number(300);
       default:
         return Number(0);
     }
@@ -274,7 +274,8 @@ const ModelAdd = ({
                 name="checkinDate"
                 value={formData.checkinDate}
                 onChange={handleChange}
-                min="2024-06-01" max="2024-12-31"
+                min="2024-06-01"
+                max="2999-12-31"
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
               {errors.checkinDate && (
@@ -288,7 +289,8 @@ const ModelAdd = ({
                 name="checkoutDate"
                 value={formData.checkoutDate}
                 onChange={handleChange}
-                min="2024-06-01" max="2024-12-31"
+                min="2024-06-01"
+                max="2999-12-31"
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
               {errors.checkoutDate && (
