@@ -16,6 +16,7 @@
     "@nextui-org/theme": "^2.2.3",
     "@reduxjs/toolkit": "^2.2.5",
     "@types/react-redux": "^7.1.33",
+    "@vercel/toolbar": "^0.1.15",
     "antd": "^5.17.0",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.1.9",
