@@ -225,7 +225,7 @@ const ModelDetail = ({
       };
 
       if (name === "roomType") {
-        const selectedRoom = roomData.find(
+        const selectedRoom: any = roomData.find(
           (room: any) => room.id === parseInt(value)
         );
         if (selectedRoom) {
@@ -550,10 +550,10 @@ const ModelDetail = ({
                   onChange={handleChange}
                   disabled={bookingData.Status ? bookingData.Status == 5 : true}
                 >
-                  <option value="1">Chưa xác nhận</option>
-                  <option value="2">Đã xác nhận</option>
-                  <option value="3">Đã check-in</option>
-                  <option value="4">Đã check-out</option>
+                  <option value="1">Đã xác nhận</option>
+                  <option value="2">Check-in</option>
+                  <option value="3">Check-out</option>
+                  <option value="4">Đã thanh toán</option>
                   <option value="5">Đã hủy</option>
                 </select>
               </div>
@@ -570,6 +570,8 @@ const ModelDetail = ({
                   type="date"
                   name="checkinDate"
                   id="checkinDate"
+                  min="2024-06-01"
+                  max="2024-12-31"
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
@@ -585,6 +587,8 @@ const ModelDetail = ({
                   type="date"
                   name="checkoutDate"
                   id="checkoutDate"
+                  min="2024-06-01"
+                  max="2024-12-31"
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   onChange={handleChange}
                 />
@@ -694,7 +698,7 @@ const ModelDetail = ({
           <MdOutlineAddBox size={30} />
         </div>
         <div className="mx-8">
-          <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#E8E8E8              ] bg-opacity-20">
+          <div className="px-4 py-4 w-full h-fit flex flex-col border-t border-b border-black bg-[#E8E8E8] bg-opacity-20">
             {bookingData.price > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[100px] font-bold">Tiền phòng</span>
@@ -720,6 +724,7 @@ const ModelDetail = ({
             <button
               disabled={bookingData.Status ? bookingData.Status == 5 : true}
               type="button"
+              onClick={handleSave}
               className={`focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 ${
                 bookingData.Status == 5
                   ? "bg-gray-400 text-gray-600"

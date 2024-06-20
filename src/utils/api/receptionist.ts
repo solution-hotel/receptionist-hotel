@@ -182,8 +182,8 @@ export const sendMailBooking = async (email: string, name: string, bookingId: nu
 
   const body = {
     ToEmail: email,
-    CustomerName: name,
-    BookingDetails: `
+    Subject: "[Blue House VietNam] - Xác nhận đặt lịch thành công",
+    Body: `
     <!DOCTYPE HTML
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"

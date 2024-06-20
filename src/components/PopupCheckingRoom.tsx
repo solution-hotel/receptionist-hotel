@@ -12,8 +12,8 @@ const PopupCheckingRoom = ({
   id,
   status,
 }: {
-  handelShowPopUp: (show: boolean, id: number | null) => void;
-  id: number | null;
+  handelShowPopUp: (show: boolean, id: any) => void;
+  id: any;
   status: number;
 }) => {
   const [selectedTask, setSelectedTask] = useState("");

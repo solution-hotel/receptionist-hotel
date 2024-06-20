@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getListRoom } from "@/utils/api/receptionist";
 
-const useFilterRoomType = (roomType, getListRoom) => {
+const useFilterRoomType = (roomType: any, getListRoom: any) => {
     const [filteredRooms, setFilteredRooms] = useState([]);
     const [roomData, setRoomData] = useState([]);
   
@@ -20,7 +20,7 @@ const useFilterRoomType = (roomType, getListRoom) => {
   
     useEffect(() => {
       if (roomType && roomData.length > 0) {
-        const filtered = roomData.filter(room => room.TypeRoomName === roomType);
+        const filtered: any = roomData.filter((room: any) => room.TypeRoomName === roomType);
         setFilteredRooms(filtered);
       } else {
         setFilteredRooms([]);

@@ -65,6 +65,26 @@ const ModelAdd = ({
         return Number(150);
       case "8":
         return Number(200);
+      case "9":
+          return Number(500);
+      case "10":
+          return Number(1000);
+      case "11":
+          return Number(800);
+      case "12":
+          return Number(180);
+      case "13":
+          return Number(250);
+      case "14":
+          return Number(100);
+      case "15":
+          return Number(150);
+      case "16":
+          return Number(250);
+      case "17":
+          return Number(200);
+      case "18":
+          return Number(300);
       default:
         return Number(0);
     }
@@ -139,7 +159,7 @@ const ModelAdd = ({
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
+                    className="border-1 w-28 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                   />
                   {errors.lastName && (
                     <span className="text-red-500">{errors.lastName}</span>
@@ -152,7 +172,7 @@ const ModelAdd = ({
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="border-1 w-24 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 justify-end rounded-md"
+                    className="border-1 w-28 h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 justify-end rounded-md"
                   />
                   {errors.firstName && (
                     <span className="text-red-500">{errors.firstName}</span>
@@ -174,6 +194,16 @@ const ModelAdd = ({
                   <option value="6">Twin</option>
                   <option value="7">Triple</option>
                   <option value="8">Family</option>
+                  <option value="9">Presidential</option>
+                  <option value="10">Penthouse</option>
+                  <option value="11">Bungalow</option>
+                  <option value="12">Studio</option>
+                  <option value="13">Loft</option>
+                  <option value="14">Standard</option>
+                  <option value="15">Deluxe</option>
+                  <option value="16">Suite</option>
+                  <option value="17">Family</option>
+                  <option value="18">Executive</option>
                 </select>
                 {errors.roomType && (
                   <span className="text-red-500">{errors.roomType}</span>
@@ -244,6 +274,7 @@ const ModelAdd = ({
                 name="checkinDate"
                 value={formData.checkinDate}
                 onChange={handleChange}
+                min="2024-06-01" max="2024-12-31"
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
               {errors.checkinDate && (
@@ -257,6 +288,7 @@ const ModelAdd = ({
                 name="checkoutDate"
                 value={formData.checkoutDate}
                 onChange={handleChange}
+                min="2024-06-01" max="2024-12-31"
                 className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
               />
               {errors.checkoutDate && (
