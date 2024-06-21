@@ -38,9 +38,9 @@ const HouseKeeping = ({
         let dirtyCount = 0;
 
         room.Data.forEach((room: any) => {
-          if (room.Status >= 2 && room.Status <= 5) {
+          if (room.Status >= 2 && room.Status <= 6) {
             dirtyCount++;
-          } else if (room.Status === 1 || room.Status === 6) {
+          } else if (room.Status === 1) {
             cleanCount++;
           }
         });
@@ -182,9 +182,9 @@ const HouseKeeping = ({
                     {room.BookingId ? "Đang có khách sử dụng" : "Phòng trống"}
                   </td>
                   <td className="px-6 py-4 text-gray-900">
-                    {room.Status >= 2 && room.Status <= 5
+                    {room.Status >= 2 && room.Status <= 6
                       ? "Phòng bẩn"
-                      : room.Status === 1 || room.Status === 6
+                      : room.Status === 1
                       ? "Phòng sạch"
                       : "Trạng thái không xác định"}
                   </td>
@@ -194,14 +194,16 @@ const HouseKeeping = ({
                         {`${room.LastName} ${room.FirstName}`}
                       </td>
                       <td className="px-6 py-4 text-gray-900">
-                        {room.Status === 3
+                        {room.Status === 1
                           ? "Chờ xác nhận"
-                          : room.Status === 4
+                          : room.Status === 2
                           ? "Đã xác nhận"
-                          : room.Status === 5
-                          ? "Đang kiểm tra"
-                          : room.Status === 6
+                          : room.Status === 3
+                          ? "Đang dọn phòng"
+                          : room.Status === 4
                           ? "Hoàn thành"
+                          : room.Status === 5
+                          ? "Hủy"
                           : null}
                       </td>
                     </>

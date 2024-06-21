@@ -96,11 +96,11 @@ const PopupCleaning = ({
           <div className="flex">
             <span className="mr-4 font-bold">Trạng thái phòng:</span>
             <span>
-              {roomData.status === 1 || roomData.status === 6
+              {roomData.status === 1
                 ? "Phòng sạch"
                 : roomData.status &&
                   roomData.status >= 2 &&
-                  roomData.status <= 5
+                  roomData.status <= 6
                 ? "Phòng bẩn"
                 : "Trạng thái không xác định"}
             </span>

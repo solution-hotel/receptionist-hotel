@@ -536,3 +536,18 @@ export const getListRoom = async () => {
 const data = await response.json();
 return data;
 };
+
+
+export const updateStatusRoom = async (id: number) => {
+  const url = `${baseurl}/cleaningroom/update?id=${id}`
+
+  const response = await fetch(url, {
+    headers:{
+      "Content-Type" : "application/json"
+    },
+    body: JSON.stringify({ Status: 2}),
+    method: "PATCH"
+  })
+  const data = await response.json();
+  return data
+}

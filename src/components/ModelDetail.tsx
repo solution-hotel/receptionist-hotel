@@ -12,6 +12,7 @@ import {
   updateBooking,
   cancelBooking,
   sendMailBooking,
+  updateStatusRoom,
 } from "@/utils/api/receptionist";
 import { format } from "date-fns";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -294,6 +295,9 @@ const ModelDetail = ({
     try {
       console.log(bookingData);
       await updateBooking(id, bookingData);
+      if (bookingData.Status === 2) {
+        await updateStatusRoom(bookingData.RoomId);
+      }
       Swal.fire({
         title: "Thành công!",
         text: "Cập nhật đặt phòng thành công.",

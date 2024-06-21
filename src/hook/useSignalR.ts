@@ -12,7 +12,7 @@ const useSignalR = (userId: string | null, userType: string) => {
   const connectionRef = useRef<signalR.HubConnection | null>(null);
 
   useEffect(() => {
-    const hubUrl = `https://api-pnv.bluejaypos.vn/signalr/hubs`;
+    const hubUrl = `https://api-pnv.bluejaypos.vn/signalr_chat.html?userId=${userId}&userType=${userType}`;
 
     const connect = async () => {
       if (!userId) return; 
