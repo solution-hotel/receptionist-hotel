@@ -19,5 +19,9 @@ export interface DetailRoom {
     roomName?: string;
     floor?: string;
     status?: number;
+    RoomNumber?: string;
+    RoomName?: string;
+    Floor?: string;
+    Status?: number;
   };
 }

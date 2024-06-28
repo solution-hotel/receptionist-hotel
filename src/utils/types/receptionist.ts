@@ -68,7 +68,7 @@ export interface DataUpdateBooking {
     RoomNumber: string;
     Status: number,
     Id: number,
-    RoomId: number
+    RoomId: any
 }
 
 export interface FormDataValidate {

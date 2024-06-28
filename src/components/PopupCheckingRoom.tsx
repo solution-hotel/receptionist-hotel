@@ -25,9 +25,6 @@ const PopupCheckingRoom = ({
   const [dataDetailRoom, setDataDetailRoom] = useState<DetailRoom>({
     Data: {},
   });
-  console.log("-------");
-  console.log("This is the data Room ID", id);
-  console.log("This is the data status", status);
 
   const handleSubmit = async () => {
     try {
@@ -84,15 +81,15 @@ const PopupCheckingRoom = ({
         <div className="w-full px-8 flex flex-col justify-center space-y-4">
           <div className="flex">
             <span className="mr-4 font-bold">Số phòng:</span>
-            <span>{roomData.roomNumber ? roomData.roomNumber : ""}</span>
+            <span>{roomData.RoomNumber ? roomData.RoomNumber : ""}</span>
           </div>
           <div className="flex">
             <span className="mr-4 font-bold">Loại phòng:</span>
-            <span>{roomData.roomName ? roomData.roomName : ""}</span>
+            <span>{roomData.RoomName ? roomData.RoomName : ""}</span>
           </div>
           <div className="flex">
             <span className="mr-4 font-bold">Tầng:</span>
-            <span>{roomData.floor ? roomData.floor : ""}</span>
+            <span>{roomData.Floor ? roomData.Floor : ""}</span>
           </div>
           {/* <div className="flex">
             <span className="mr-4 font-bold">Trạng thái phòng:</span>

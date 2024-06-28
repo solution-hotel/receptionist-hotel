@@ -241,6 +241,11 @@ const ModelDetail = ({
         }
       }
 
+
+      console.log('====================================');
+      console.log("data update", updatedData);
+      console.log('====================================');
+
       return updatedData as DataUpdateBooking;
     });
   };
@@ -513,7 +518,7 @@ const ModelDetail = ({
               <div className="flex flex-col">
                 <label htmlFor="numberRoom">Chọn số phòng</label>
                 <select
-                  name="RoomNumber"
+                  name="RoomId"
                   value={bookingData.RoomId}
                   onChange={handleChange}
                   className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"

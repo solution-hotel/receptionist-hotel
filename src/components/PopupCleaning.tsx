@@ -107,7 +107,7 @@ const PopupCleaning = ({
           </div>
         </div>
         <div className="w-full px-8 flex flex-col justify-center mt-4">
-          {roomData.status === 2 && (
+          {roomData.status !== 1 && (
             <>
               <select
                 id="task-select"

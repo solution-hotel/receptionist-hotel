@@ -1,6 +1,6 @@
 import { DataBooking, DataAddBooking, DataUpdateBooking } from "@/utils/types/receptionist"
 const baseurl = 'https://api-pnv.bluejaypos.vn';
-// const baseurl = 'http://192.168.10.70:83';
+// const baseurl = 'http://172.20.160.1:83';
 
 export const loginApi = async (email:string, password:string) => {
     const url = `${baseurl}/auth/login`;
@@ -135,7 +135,7 @@ export const updateBooking = async (id: number, formData: DataUpdateBooking) => 
     FirstName: formData.firstName,
     LastName: formData.lastName,
     Email: formData.email,
-    RoomId: parseInt(formData.RoomNumber),
+    RoomId: parseInt(formData.RoomId),
     PhoneNumber: formData.phoneNumber,
     Status: formData.Status
   }
@@ -185,9 +185,9 @@ export const sendMailBooking = async (email: string, name: string, bookingId: nu
     Subject: "[Blue House VietNam] - Xác nhận đặt lịch thành công",
     Body: `
     <!DOCTYPE HTML
-    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
-    xmlns:o="urn:schemas-microsoft-com:office:office">
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office">
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -304,6 +304,55 @@ export const sendMailBooking = async (email: string, name: string, bookingId: nu
         padding: 10px 10px 40px !important;
       }
     }
+
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .background-image {
+      width: 100%;
+      height: auto;
+      transform: scaleX(-1);
+    }
+
+    .text-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 100px 10px 27px 43px;
+      color: #ffffff;
+      font-family: 'Raleway', sans-serif;
+      z-index: 1;
+      flex-direction: column;
+    }
+
+    .text-overlay p {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .text-overlay h1 {
+      margin: 12x 0 0 0;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .content-below {
+      position: relative;
+      z-index: 0;
+      background-color: #A1C1EF;
+      line-height: 50px;
+      padding: 10px 0px;
+      font-family: 'Raleway', sans-serif;
+    }
+
   </style>
   <link href="https://fonts.googleapis.com/css?family=Raleway:400,700&display=swap" rel="stylesheet" type="text/css">
 </head>
@@ -316,127 +365,89 @@ export const sendMailBooking = async (email: string, name: string, bookingId: nu
     <tbody>
       <tr style="vertical-align: top">
         <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-          <div class="u-row-container"
-            style="padding: 0px;background-image: url('images/image-5.png');background-repeat: no-repeat;background-position: center top;background-color: transparent">
+          <div class="u-row-container" style="padding: 0px;">
             <div class="u-row"
               style="margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
               <div
                 style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
                 <div class="u-col u-col-100"
                   style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                  <div style="height: 100%;width: 100% !important;">
+                  <div style="height: 100%;width: 100% !important; ">
                     <div
-                      style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-
-                      <table id="u_content_heading_2" style="font-family:'Raleway',sans-serif;" role="presentation"
-                        cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding"
-                              style="overflow-wrap:break-word;word-break:break-word;padding:130px 10px 27px 43px;font-family:'Raleway',sans-serif;"
-                              align="left">
-
-                              <h1
-                                style="margin: 0px; color: #ffffff; line-height: 0%; text-align: left; word-wrap: break-word; font-size: 20px; font-weight: 400;">
-                                <span><span style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                        style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                            style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                                style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                                    style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                                        style="line-height: 0px;"><span style="line-height: 0px;"><span
-                                                            style="line-height: 0px;"><span
-                                                              style="line-height: 0px;"><span
-                                                                style="line-height: 0px;"><span
-                                                                  style="line-height: 0px;">Xin
-                                                                  chào!</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>
-                              </h1>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table id="u_content_heading_3" style="font-family:'Raleway',sans-serif;" role="presentation"
-                        cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding"
-                              style="overflow-wrap:break-word;word-break:break-word;padding:51px 10px 50px 43px;font-family:'Raleway',sans-serif;"
-                              align="left">
-
-                              <h1
-                                style="margin: 0px; color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word; font-size: 24px; font-weight: 400;">
-                                <span style="line-height: 33.6px;"><span style="line-height: 33.6px;"><strong>Bạn đã đặt
-                                      phòng <br />thành công tại <b style="color: #2e86de;">BlueHouse</b><br />Chi tiết đặt phòng bên
-                                      dưới.</strong></span></span>
-                              </h1>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table id="u_content_text_1" style="font-family:'Raleway',sans-serif;" role="presentation"
-                        cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding"
-                              style="overflow-wrap:break-word;word-break:break-word;padding:10px 43px;font-family:'Raleway',sans-serif;"
-                              align="left">
-
-                              <div style="font-size: 14px; line-height: 160%; text-align: left; word-wrap: break-word;">
-                                <p style="line-height: 160%;">Xin chào <b><i>${name}!</i></b></p>
-                                <p style="line-height: 160%;"> </p>
-                                <p style="line-height: 160%;">Cảm ơn bạn đã đặt lịch với BlueHouse Vietnam.</p>
-                                <p style="line-height: 160%;">Để xem chi tiết thông tin đặt phòng, vui lòng click vào
-                                  button bên dưới.</p>
-                              </div>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table id="u_content_button_1" style="font-family:'Raleway',sans-serif;" role="presentation"
-                        cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding"
-                              style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 43px;font-family:'Raleway',sans-serif;"
-                              align="left">
-
-                              <div align="left">
-                                <a href="https://client-hotel.netlify.app/?id=${bookingId}" target="_blank" class="v-button v-size-width"
-                                  style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #2e86de; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:60%; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-                                  <span style="display:block;padding:10px 20px;line-height:120%;">Nhấn để xem chi tiết
-                                    thông tin đặt phòng</span>
-                                </a>
-                              </div>
-
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <table id="u_content_text_2" style="font-family:'Raleway',sans-serif;" role="presentation"
-                        cellpadding="0" cellspacing="0" width="100%" border="0">
-                        <tbody>
-                          <tr>
-                            <td class="v-container-padding-padding"
-                              style="overflow-wrap:break-word;word-break:break-word;padding:10px 43px 30px;font-family:'Raleway',sans-serif;"
-                              align="left">
-
-                              <div style="font-size: 14px; line-height: 160%; text-align: left; word-wrap: break-word;">
-                                <p style="line-height: 160%;">Chúng tôi hy vọng rằng bạn sẽ có những trải nghiệm tốt
-                                  nhất khi đến với BlueHouse. </p>
-                                <p style="line-height: 160%;">Chúc quý khách có một kỳ nghĩ vui vẻ!</p>
-                                <p style="line-height: 160%;"> </p>
-                                <p style="line-height: 160%;">Trân trọng,</p>
-                                <p style="line-height: 160%;"><b>BlueHouse Vietnam</b></p>
-                              </div>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent; ">
+                      <div class="image-wrapper">
+                        <img class="background-image"
+                          src="https://img.freepik.com/premium-photo/modern-hotel-room-with-illuminated-pictures_922357-14230.jpg"
+                          alt="">
+                        <div class="text-overlay" style="text-shadow: 2px 2px 5px #30336b;">
+                          <p>Xin chào <b><i>Nguyễn Hữu Thắng!</i></b></p>
+                          <h1 style=" font-weight: bold">Bạn đã đặt phòng <br />thành công tại <b
+                              style="color: #2e86de; text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;">BlueHouse</b><br />Chi
+                            tiết đặt phòng bên dưới.</h1>
+                        </div>
+                      </div>
+                      <div class="content-below">
+                        <table id="u_content_text_1" style="font-family:'Raleway',sans-serif;" role="presentation"
+                          cellpadding="0" cellspacing="0" width="100%" border="0">
+                          <tbody>
+                            <tr>
+                              <td class="v-container-padding-padding"
+                                style="overflow-wrap:break-word;word-break:break-word;padding:10px 45px;font-family:'Raleway',sans-serif;"
+                                align="left">
+                                <div
+                                  style="font-size: 14px; line-height: 160%; text-align: left; word-wrap: break-word;">
+                                  <p style="line-height: 100%;"> </p>
+                                  <p style="line-height: 100%;">Cảm ơn bạn đã đặt lịch với BlueHouse Vietnam.</p>
+                                  <p style="line-height: 160%;">Để xem chi tiết thông tin đặt phòng, vui lòng click vào
+                                    button bên dưới.</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <table id="u_content_button_1" style="font-family:'Raleway',sans-serif;" role="presentation"
+                          cellpadding="0" cellspacing="0" width="100%" border="0">
+                          <tbody>
+                            <tr>
+                              <td class="v-container-padding-padding"
+                                style="overflow-wrap:break-word;word-break:break-word;padding:10px 10px 10px 43px;font-family:'Raleway',sans-serif;"
+                                align="left">
+                                <div align="left">
+                                  <a href="https://unlayer.com" target="_blank" class="v-button v-size-width"
+                                    style="box-sizing: border-box;display: inline-block;text-decoration: none;-webkit-text-size-adjust: none;
+                                    text-align: center;color: #FFFFFF; background-color: #2e86de; 
+                                    border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; 
+                                    width:60%; max-width:100%; overflow-wrap: break-word; word-break: break-word; 
+                                    word-wrap:break-word;font-size: 14px; border: 2px solid #04AA6D;">
+                                    <span style="display:block;padding:10px 0px;line-height:120%;">Nhấn để xem chi tiết
+                                      thông tin đặt phòng</span>
+                                  </a>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <table id="u_content_text_2" style="font-family:'Raleway',sans-serif;" role="presentation"
+                          cellpadding="0" cellspacing="0" width="100%" border="0">
+                          <tbody>
+                            <tr>
+                              <td class="v-container-padding-padding"
+                                style="overflow-wrap:break-word;word-break:break-word;padding:10px 43px 30px;font-family:'Raleway',sans-serif;"
+                                align="left">
+                                <div
+                                  style="font-size: 14px; line-height: 160%; text-align: left; word-wrap: break-word;">
+                                  <p style="line-height: 160%;">Chúng tôi hy vọng rằng bạn sẽ có những trải nghiệm tốt
+                                    nhất khi đến với BlueHouse. </p> <br>
+                                  <p style="line-height: 160%;">Chúc quý khách có một kỳ nghĩ vui vẻ!</p>
+                                  <p style="line-height: 160%;"> </p>
+                                  <p style="line-height: 160%;">Trân trọng,</p>
+                                  <p style="line-height: 160%;"><b>BlueHouse Vietnam</b></p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -448,7 +459,9 @@ export const sendMailBooking = async (email: string, name: string, bookingId: nu
     </tbody>
   </table>
 </body>
+
 </html>
+
     `
   };
 

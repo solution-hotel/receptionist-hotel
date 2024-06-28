@@ -31,7 +31,7 @@ const HouseKeeping = ({
     const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getListRoom(parseInt(page), 5);
+        const data = await getListRoom(parseInt(page), 6);
         const room = await getListRoom(1, 1000);
 
         let cleanCount = 0;

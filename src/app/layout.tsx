@@ -4,6 +4,7 @@
 import "./globals.css";
 import { Provider } from "react-redux";
 import store from "@/store";
+import { Suspense } from "react";
 // const poppins = Poppins({ subsets: ["latin"], weight: "100", style: "italic" });
 
 // export const metadata: Metadata = {
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Provider store={store}>
-          <div>{children}</div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <div>{children}</div>
+          </Suspense>
         </Provider>
       </body>
     </html>

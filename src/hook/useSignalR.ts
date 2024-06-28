@@ -12,14 +12,13 @@ const useSignalR = (userId: string | null, userType: string) => {
   const connectionRef = useRef<signalR.HubConnection | null>(null);
 
   useEffect(() => {
-    const hubUrl = `https://api-pnv.bluejaypos.vn/signalr_chat.html?userId=${userId}&userType=${userType}`;
+    const hubUrl = `https://api-pnv.bluejaypos.vn/signalr/hubs`;
 
     const connect = async () => {
       if (!userId) return; 
 
       const newConnection = new signalR.HubConnectionBuilder()
         .withUrl(hubUrl)
-        .withAutomaticReconnect()
         .build();
 
       newConnection.on('ReceiveMessage', (user: string, message: string) => {

@@ -6,6 +6,8 @@ interface ChatComponentProps {
 }
 
 const Chat: React.FC<ChatComponentProps> = ({ userId }) => {
+  console.log("========================", userId);
+
   const { connection, messages, sendMessage } = useSignalR(
     userId,
     "receptionists"
