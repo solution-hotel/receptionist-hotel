@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { loginApi } from "./../../utils/api/receptionist";
 import ClipLoader from "react-spinners/ClipLoader";
 import Swal from "sweetalert2";
+import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 
 const LoginPage = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -93,7 +94,7 @@ const LoginPage = () => {
         <div className="text-3xl mr-auto mx-24 my-4 flex">Đăng nhập</div>
         <div>
           <div>
-            <div className="mb-6">
+            <div className="mb-2">
               <input
                 type="email"
                 id="email"
@@ -103,15 +104,15 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
-              )}
             </div>
-            <div className="mb-6 relative">
+            {errors.email && (
+              <p className="text-red-500 text-sm mb-2">{errors.email}</p>
+            )}
+            <div className="mb-2 relative">
               <input
                 type={showPassword ? "text" : "password"}
                 id="password"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:border-gray-600 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:placeholder-gray-400 dark:border-gray-600 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500 pr-10" // Added pr-10 to provide space for the icon
                 placeholder="•••••••••"
                 required
                 value={password}
@@ -119,33 +120,19 @@ const LoginPage = () => {
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 top-1/2 transform -translate-y-1/2"
+                className="absolute inset-y-0 right-0 flex items-center pr-3"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
-                  <svg
-                    className="h-5 w-5 text-gray-500"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 4.5c-4.82 0-8.8 3.5-10 8 1.2 4.5 5.18 8 10 8s8.8-3.5 10-8c-1.2-4.5-5.18-8-10-8zM12 18.5c-3.45 0-6.5-2.68-7.42-6 .93-3.32 4-6 7.42-6s6.5 2.68 7.42 6c-.92 3.32-3.97 6-7.42 6zM12 8.5c-1.93 0-3.5 1.57-3.5 3.5s1.57 3.5 3.5 3.5 3.5-1.57 3.5-3.5-1.57-3.5-3.5-3.5zM12 14c-.83 0-1.5-.67-1.5-1.5S11.17 11 12 11s1.5.67 1.5 1.5S12.83 14 12 14z" />
-                  </svg>
+                  <IoIosEyeOff className="h-5 w-5 text-gray-500" />
                 ) : (
-                  <svg
-                    className="h-5 w-5 text-gray-500"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M12 6c3.53 0 6.43 2.29 7.4 5.5-.97 3.21-3.87 5.5-7.4 5.5s-6.43-2.29-7.4-5.5C5.57 8.29 8.47 6 12 6zM12 4c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zM12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                  </svg>
+                  <IoIosEye className="h-5 w-5 text-gray-500" />
                 )}
               </button>
-              {errors.password && (
-                <p className="text-red-500 text-sm">{errors.password}</p>
-              )}
             </div>
+            {errors.password && (
+              <p className="text-red-500 text-sm">{errors.password}</p>
+            )}
           </div>
           <div className="text-sm text-center my-4 font-light hover:text-blue-500 cursor-pointer">
             Quên mật khẩu?
