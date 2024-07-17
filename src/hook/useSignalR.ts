@@ -19,6 +19,7 @@ const useSignalR = (userId: string | null, userType: string) => {
 
       const newConnection = new signalR.HubConnectionBuilder()
         .withUrl(hubUrl)
+        .withKeepAliveInterval(100)
         .build();
 
       newConnection.on('ReceiveMessage', (user: string, message: string) => {

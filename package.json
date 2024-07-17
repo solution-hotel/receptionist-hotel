@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "@types/react-redux": "^7.1.33",
     "@vercel/toolbar": "^0.1.15",
+    "agora-react-uikit": "^1.2.0",
     "antd": "^5.17.0",
     "date-fns": "^3.6.0",
     "framer-motion": "^11.1.9",
@@ -36,8 +37,7 @@
     "reactstrap": "^9.2.2",
     "redux": "^5.0.1",
     "sweetalert2": "^11.11.1",
-    "swr": "^2.2.5",
-    "zustand": "^4.5.4"
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20",

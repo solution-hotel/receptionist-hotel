@@ -8,6 +8,7 @@ import {
   MdArrowBackIos,
   MdArticle,
   MdDehaze,
+  MdOutlineBedroomChild,
 } from "react-icons/md";
 import Image from "next/image";
 import { SidebarContext } from "./SidebarContext";
@@ -18,10 +19,15 @@ const sidebarItems = [
     href: "/dashboard/receptionist",
     icon: MdPersonPin,
   },
+  // {
+  //   name: "Buồng Phòng",
+  //   href: "/dashboard/housekeeping",
+  //   icon: MdPersonOutline,
+  // },
   {
-    name: "Buồng Phòng",
-    href: "/dashboard/housekeeping",
-    icon: MdPersonOutline,
+    name: "Sơ Đồ Phòng",
+    href: "/dashboard/roomlayout",
+    icon: MdOutlineBedroomChild,
   },
 ];
 

@@ -1,6 +1,6 @@
 import { DataBooking, DataAddBooking, DataUpdateBooking } from "@/utils/types/receptionist"
 const baseurl = 'https://api-pnv.bluejaypos.vn';
-// const baseurl = 'http://172.20.160.1:83';
+// const baseurl = 'http://192.168.1.107:83';
 
 export const loginApi = async (email:string, password:string) => {
     const url = `${baseurl}/auth/login`;
@@ -105,7 +105,8 @@ export const addBooking = async (formData: DataAddBooking) => {
     PhoneNumber: formData.phoneNumber,
   };
   try {
-    const response = await fetch(url, {
+    console.log("bookingData",bookingData)
+    const response = await fetch(url, { 
       method: "POST",
       headers: {
         "Content-Type": "application/json",

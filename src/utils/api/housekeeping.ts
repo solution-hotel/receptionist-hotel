@@ -1,5 +1,5 @@
 export const baseurl = 'https://api-pnv.bluejaypos.vn';
-
+// const baseurl = 'http://192.168.1.107:83';
 export const getListRoom = async (
   page: number,
   limit: number

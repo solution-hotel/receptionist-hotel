@@ -241,10 +241,9 @@ const ModelDetail = ({
         }
       }
 
-
-      console.log('====================================');
+      console.log("====================================");
       console.log("data update", updatedData);
-      console.log('====================================');
+      console.log("====================================");
 
       return updatedData as DataUpdateBooking;
     });
@@ -420,6 +419,7 @@ const ModelDetail = ({
                     id="maximumCapacity"
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
+                    disabled={true}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
@@ -460,6 +460,7 @@ const ModelDetail = ({
                     id="numberOfAdults"
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
                     onChange={handleChange}
+                    disabled={true}
                   />
                 </div>
                 <div className="flex flex-col mb-4">
@@ -489,6 +490,7 @@ const ModelDetail = ({
                 <div className="flex flex-col mb-4">
                   <label htmlFor="numberOfChildren">Trẻ em</label>
                   <input
+                    disabled={true}
                     value={bookingData.numberOfChildren}
                     type="number"
                     name="numberOfChildren"
@@ -505,7 +507,7 @@ const ModelDetail = ({
                     name="price"
                     value={
                       bookingData.price
-                        ? `${bookingData.price},000 VNĐ`
+                        ? `${bookingData.price} VNĐ`
                         : bookingData.price
                     }
                     onChange={handleChange}

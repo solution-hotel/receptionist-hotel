@@ -6,6 +6,7 @@ export interface Room {
     Status: number;
     LastName: string;
     FirstName: string;
+    Floor: string;
   }
 
 export interface ListHousekeeping {
@@ -15,6 +16,7 @@ export interface ListHousekeeping {
 }
 export interface DetailRoom {
   Data: {
+    booking?: [];
     roomNumber?: string;
     roomName?: string;
     floor?: string;

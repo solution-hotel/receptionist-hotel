@@ -82,7 +82,7 @@ const Navbar = () => {
               {userProfile.LastName} {userProfile.FirstName}
             </>
           ) : (
-            "Đang tải..."
+            "Nguyễn Thị Ngọc Huyền"
           )}
         </div>
         <div className="relative flex items-center">
