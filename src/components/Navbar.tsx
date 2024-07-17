@@ -37,10 +37,10 @@ const Navbar = () => {
     } catch (error) {
       console.error("Error fetching user profile:", error);
     }
-    router.push("/");
+    await router.push("/");
     setTimeout(() => {
       window.location.reload();
-    }, 100);
+    }, 300);
   };
   useEffect(() => {
     if (token) {
