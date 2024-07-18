@@ -189,7 +189,9 @@ const ModelCheckout = ({
                   <td className="px-6 py-4">{bookingData.checkinDate}</td>
                   <td className="px-6 py-4">{bookingData.checkoutDate}</td>
                   <td className="px-6 py-4">1</td>
-                  <td className="px-6 py-4">{bookingData.price.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    {bookingData.price.toLocaleString("vi-VN")} VNĐ
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -246,10 +248,13 @@ const ModelCheckout = ({
                           {i + 1}
                         </th>
                         <td className="px-6 py-4">{(item as any)?.name}</td>
-                        <td className="px-6 py-4">{(item as any)?.price}</td>
+                        <td className="px-6 py-4">
+                          {" "}
+                          {(item as any)?.price.toLocaleString("vi-VN")} VNĐ
+                        </td>
                         <td className="px-6 py-4">{bookingItem.Quantity}</td>
                         <td className="px-6 py-4 text-right">
-                          {bookingItem.TotalPrice}
+                          {bookingItem.TotalPrice.toLocaleString("vi-VN")} VNĐ
                         </td>
                       </tr>
                     );
@@ -273,19 +278,19 @@ const ModelCheckout = ({
             {totalServicePrice > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[55px] font-bold">Tổng tiền dịch vụ</span>
-                <span>{totalServicePrice.toFixed(2)} VNĐ</span>
+                <span className="font-bold">{totalServicePrice.toLocaleString("vi-VN")} VNĐ</span>
               </div>
             )}
             {bookingData.price > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[60px] font-bold">Tổng tiền phòng</span>
-                <span>{bookingData.price.toFixed(2)} VNĐ</span>
+                <span className="font-bold">{bookingData.price.toLocaleString("vi-VN")} VNĐ</span>
               </div>
             )}
             {totalPrice > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[101px] font-bold">Tổng tiền</span>
-                <span>{totalPrice.toFixed(2)} VNĐ</span>
+                <span className="font-bold">{totalPrice.toLocaleString("vi-VN")} VNĐ</span>
               </div>
             )}
           </div>

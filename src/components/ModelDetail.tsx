@@ -507,8 +507,8 @@ const ModelDetail = ({
                     name="price"
                     value={
                       bookingData.price
-                        ? `${bookingData.price} VNĐ`
-                        : bookingData.price
+                        ? `${bookingData.price.toLocaleString("vi-VN")} VNĐ`
+                        : ""
                     }
                     onChange={handleChange}
                     className="border-1 w-full h-fit focus:outline-none px-2 py-3 focus:ring focus:ring-blue-400 rounded-md"
@@ -682,10 +682,12 @@ const ModelDetail = ({
                           {i + 1}
                         </th>
                         <td className="px-6 py-4">{(item as any)?.name}</td>
-                        <td className="px-6 py-4">{(item as any)?.price}</td>
+                        <td className="px-6 py-4">
+                          {(item as any)?.price.toLocaleString("vi-VN")} VNĐ
+                        </td>
                         <td className="px-6 py-4">{bookingItem.Quantity}</td>
                         <td className="px-6 py-4 text-right">
-                          {bookingItem.TotalPrice}
+                          {bookingItem.TotalPrice.toLocaleString("vi-VN")} VNĐ
                         </td>
                         <td className="px-6 py-4 text-right">
                           <a className="font-medium text-blue-600 dark:text-blue-500 hover:underline cursor-pointer">
@@ -713,19 +715,25 @@ const ModelDetail = ({
             {bookingData.price > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[100px] font-bold">Tiền phòng</span>
-                <span className="font-bold">{`${bookingData.price},000 VNĐ`}</span>
+                <span className="font-bold">{`${bookingData.price.toLocaleString(
+                  "vi-VN"
+                )} VNĐ`}</span>
               </div>
             )}
             {totalServicePrice > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[95px] font-bold">Tiền dịch vụ</span>
-                <span className="font-bold">{`${totalServicePrice},000 VNĐ`}</span>
+                <span className="font-bold">{`${totalServicePrice.toLocaleString(
+                  "vi-VN"
+                )} VNĐ`}</span>
               </div>
             )}
             {totalPrice > 0 && (
               <div className="flex justify-end">
                 <span className="mr-[100px] font-bold">Tổng tiền</span>
-                <span className="font-bold">{`${totalPrice},000 VNĐ`}</span>
+                <span className="font-bold">{`${totalPrice.toLocaleString(
+                  "vi-VN"
+                )} VNĐ`}</span>
               </div>
             )}
           </div>

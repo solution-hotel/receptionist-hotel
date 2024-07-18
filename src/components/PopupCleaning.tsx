@@ -94,13 +94,17 @@ const PopupCleaning = ({
           <div className="flex">
             <span className="mr-4 font-bold">Trạng thái phòng:</span>
             <span>
+              {roomData.booking && roomData.booking.length > 0
+                ? "Đang có khách sử dụng"
+                : "Phòng trống"}{" "}
+              /
               {roomData.status === 1
-                ? "Phòng sạch"
+                ? " Phòng sạch"
                 : roomData.status &&
                   roomData.status >= 2 &&
                   roomData.status <= 6
-                ? "Phòng bẩn"
-                : "Trạng thái không xác định"} / {roomData.booking && roomData.booking.length > 0 ? "Đang có khách sử dụng" : "Phòng trống"}
+                ? " Phòng bẩn"
+                : " Trạng thái không xác định"}
             </span>
           </div>
         </div>

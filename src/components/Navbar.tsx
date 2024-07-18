@@ -65,7 +65,7 @@ const Navbar = () => {
   }, [dropdownRef]);
 
   return (
-    <div className="w-full flex justify-between px-4 items-center gap-2 border-b border-black bg-[#F9F8F8] relative px-2 py-2">
+    <div className="w-full flex justify-between items-center gap-2 border-b border-black bg-[#F9F8F8] relative px-2 py-2">
       <div className="font-bold text-[#2457C5]">BLUE HOUSE</div>
       <div>
         {/* {userProfile && (
