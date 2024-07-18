@@ -6,7 +6,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import PopupCleaning from "./../../../components/PopupCleaning";
 import { FcAlarmClock } from "react-icons/fc";
 import { Tooltip } from "react-tooltip";
-import { FcCheckmark } from "react-icons/fc";
+import { FcCheckmark, FcClock } from "react-icons/fc";
 
 const RoomLayout = () => {
   const [listRoom, setDataListRoom] = useState<Room[]>([]);
@@ -338,23 +338,28 @@ const RoomLayout = () => {
                                 : "bg-blue-600 bg-opacity-70"
                             }`}
                           >
-                            {room.Status >= 3 && room.Status <= 5 && (
-                              <>
-                                <FcAlarmClock
-                                  data-tip
-                                  data-for={`tooltip-${room.Id}`}
-                                  data-tooltip-id={`tooltip-${room.Id}`}
-                                  className="absolute w-[20px] h-[20px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                />
-                                <Tooltip id={`tooltip-${room.Id}`} place="top">
-                                  {getTooltipContent(
-                                    room.Status,
-                                    room.LastName,
-                                    room.FirstName
-                                  )}
-                                </Tooltip>
-                              </>
-                            )}
+                            {room.Status === 3 || room.Status === 4 ? (
+                              <FcClock
+                                data-tip
+                                data-for={`tooltip-${room.Id}`}
+                                data-tooltip-id={`tooltip-${room.Id}`}
+                                className="absolute w-[20px] h-[20px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                              />
+                            ) : room.Status === 5 ? (
+                              <FcAlarmClock
+                                data-tip
+                                data-for={`tooltip-${room.Id}`}
+                                data-tooltip-id={`tooltip-${room.Id}`}
+                                className="absolute w-[20px] h-[20px] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                              />
+                            ) : null}
+                            <Tooltip id={`tooltip-${room.Id}`} place="top">
+                              {getTooltipContent(
+                                room.Status,
+                                room.LastName,
+                                room.FirstName
+                              )}
+                            </Tooltip>
                           </div>
                           <span>{room.RoomNumber}</span>
                         </span>
