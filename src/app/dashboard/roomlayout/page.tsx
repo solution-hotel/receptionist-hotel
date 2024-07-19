@@ -215,12 +215,15 @@ const RoomLayout = () => {
       <div className="top-2 left-2 flex space-x-2 justify-center mt-8 mb-8">
         {/* Tất cả */}
         <div
-          className={`flex gap-4 items-center cursor-pointer ${
+          className={`flex gap-4 items-center relative cursor-pointer ${
             selectedFilters.length === 0 ? "text-[#2457C5] font-bold" : ""
           }`}
           onClick={() => handleRoomFilter("all")}
         >
-          <div className="text-sm mr-16">Tất cả</div>
+          {selectedFilters.length === 0 && (
+            <FcCheckmark className="absolute left-[-20px] w-[30px] h-[30px]" />
+          )}
+          <div className="text-sm ml-4">Tất cả</div>
         </div>
         {/* Phòng sạch */}
         <div
